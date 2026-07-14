@@ -204,3 +204,18 @@ button:hover {
         width: 100%; /* Un producto por fila */
     }
 }
+
+/* ESTILOS PARA EL LOGO */
+.logo-contenedor {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px; /* Espacio entre el logo y el texto */
+    margin-bottom: 10px;
+}
+
+.logo-cabecera {
+    width: 65px; /* Ajustá este número si querés el logo más grande o chico */
+    height: auto;
+    border-radius: 10px; /* Opcional: redondea un poco los bordes de tu logo */
+}

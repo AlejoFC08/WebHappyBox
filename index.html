@@ -8,10 +8,15 @@
 </head>
 <body>
 
-    <header>
-        <h1>HappyBox 🎁</h1>
+<header>
+        <!-- Contenedor para alinear el logo y el título -->
+        <div class="logo-contenedor">
+            <img src="logo.png" alt="Logo de HappyBox" class="logo-cabecera">
+            <h1>HappyBox</h1>
+        </div>
         <p>Cajas con golosinas listas para regalar</p>
         
+        <!-- Botón para ver el pedido en cabecera -->
         <button id="icono-carrito" onclick="abrirCarrito()">
             🛒 Mi Pedido (<span id="contador-carrito">0</span>)
         </button>
