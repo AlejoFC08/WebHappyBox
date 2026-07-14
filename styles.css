@@ -1,120 +1,167 @@
-/* ESTILOS GENERALES */
+/* PALETA DE COLORES Y ESTILOS GENERALES */
+:root {
+    --azul-marino: #1C2836; /* Color de la caja */
+    --dorado: #C6A664; /* Color del moño */
+    --dorado-oscuro: #ab8e53;
+    --fondo-claro: #FCFBF9; /* Blanco apenas cálido */
+    --texto-oscuro: #333333;
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Montserrat', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #fcfcfc;
-    color: #333;
+    background-color: var(--fondo-claro);
+    color: var(--texto-oscuro);
 }
 
+/* TIPOGRAFÍAS PARA TÍTULOS */
+h1, h2, h3, .precio {
+    font-family: 'Playfair Display', serif;
+    color: var(--azul-marino);
+    font-weight: 600;
+}
+
+/* CABECERA MINIMALISTA */
 header {
-    background-color: #ff6b81;
-    color: white;
+    background-color: #ffffff;
     text-align: center;
-    padding: 30px; /* Más espacio */
-    position: relative; /* Para el botón del carrito */
+    padding: 30px 20px; 
+    position: relative;
+    border-bottom: 1px solid #eaeaea;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
 }
 
-header h1 {
-    margin: 0;
-    font-size: 2.8rem; /* Un poco más grande */
+.logo-contenedor {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Nuevo botón del carrito en cabecera */
+.logo-cabecera {
+    width: 280px; /* Tamaño ideal para que se lea el texto del logo */
+    height: auto;
+}
+
+/* BOTÓN DEL CARRITO EN CABECERA */
 #icono-carrito {
-    background-color: #25D366; /* Un color que combine, o #ff4757 */
+    background-color: var(--dorado); 
     color: white;
     border: none;
     padding: 10px 20px;
-    border-radius: 20px;
+    border-radius: 30px;
     cursor: pointer;
     position: absolute;
     top: 30px;
     right: 30px;
-    font-size: 1.1rem;
-    font-weight: bold;
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
     display: flex;
     gap: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    transition: transform 0.2s;
+    box-shadow: 0 4px 10px rgba(198, 166, 100, 0.3);
+    transition: all 0.3s ease;
 }
 
 #icono-carrito:hover {
-    transform: scale(1.05);
+    background-color: var(--dorado-oscuro);
+    transform: translateY(-2px);
 }
 
 .contenedor {
     max-width: 1200px;
-    margin: 30px auto;
+    margin: 50px auto;
     padding: 0 15px;
 }
 
-/* CATÁLOGO DE PRODUCTOS (Ocupa todo el ancho) */
+/* CATÁLOGO DE PRODUCTOS */
 .productos-completo {
     display: flex;
     flex-wrap: wrap;
-    gap: 25px; /* Más espacio */
-    justify-content: center; /* Centrar productos */
+    gap: 30px; 
+    justify-content: center; 
 }
 
 .tarjeta-producto {
     background: white;
-    border-radius: 12px; /* Bordes más redondeados */
-    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-    padding: 18px;
-    width: calc(33.33% - 40px); /* 3 productos por fila en escritorio */
+    border-radius: 8px; 
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+    padding: 20px;
+    width: calc(33.33% - 40px);
     box-sizing: border-box;
     text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tarjeta-producto:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(28, 40, 54, 0.08);
 }
 
 .tarjeta-producto img {
     max-width: 100%;
-    height: 220px; /* Un poco más grandes */
+    height: 250px; 
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.tarjeta-producto h3 {
+    margin: 10px 0;
+    font-size: 1.4rem;
+    letter-spacing: 0.5px;
+}
+
+.tarjeta-producto p {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.5;
 }
 
 .precio {
-    font-size: 1.6rem;
-    font-weight: bold;
-    color: #ff6b81;
-    margin: 12px 0;
+    font-size: 1.8rem;
+    color: var(--dorado); /* El precio resalta en dorado */
+    margin: 15px 0;
 }
 
+/* BOTONES GLOBALES */
 button {
-    background-color: #ff6b81;
+    background-color: var(--azul-marino);
     color: white;
     border: none;
     padding: 12px 18px;
-    border-radius: 8px;
+    border-radius: 4px;
     cursor: pointer;
-    font-size: 1.1rem;
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
     width: 100%;
-    transition: 0.3s;
+    transition: all 0.3s;
+    letter-spacing: 0.5px;
 }
 
 button:hover {
-    background-color: #ff4757;
+    background-color: var(--dorado);
 }
 
-/* LA VENTANA SEPARADA DEL CARRITO (EL MODAL) */
+/* LA VENTANA SEPARADA DEL CARRITO (MODAL) */
 #panel-carrito-overlay {
-    position: fixed; /* Ocupa toda la pantalla, fijo */
+    position: fixed; 
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro translúcido */
+    background-color: rgba(28, 40, 54, 0.8); /* Fondo oscuro elegante */
     display: flex;
-    justify-content: center; /* Centrado horizontal */
-    align-items: center; /* Centrado vertical */
-    z-index: 1000; /* Por encima de todo */
-    opacity: 0; /* Oculto inicialmente con animación */
+    justify-content: center; 
+    align-items: center; 
+    z-index: 1000; 
+    opacity: 0; 
     visibility: hidden;
     transition: 0.3s;
 }
 
-/* Clase para mostrar el carrito con animación */
 #panel-carrito-overlay.panel-visible {
     opacity: 1;
     visibility: visible;
@@ -122,100 +169,94 @@ button:hover {
 
 .panel-carrito-modal {
     background: white;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
     width: 90%;
-    max-width: 600px; /* Ancho máximo de la ventana */
-    max-height: 80vh; /* Alto máximo (80% del alto de pantalla) */
-    overflow-y: auto; /* Scroll interno si hay muchos productos */
-    position: relative; /* Para el botón cerrar */
+    max-width: 500px; 
+    max-height: 80vh; 
+    overflow-y: auto; 
+    position: relative; 
 }
 
 .cabecera-carrito {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #ff6b81;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
+    border-bottom: 2px solid var(--dorado);
+    margin-bottom: 20px;
+    padding-bottom: 15px;
 }
 
 .cabecera-carrito h2 {
     margin: 0;
+    font-size: 1.8rem;
 }
 
 .btn-cerrar {
-    background-color: #eee;
-    color: #555;
+    background-color: transparent;
+    color: #999;
     width: auto;
-    padding: 8px 12px;
-    font-weight: bold;
+    padding: 5px 10px;
     font-size: 1.2rem;
-    border-radius: 50%; /* Botón circular */
+    border-radius: 50%;
 }
 
 .btn-cerrar:hover {
-    background-color: #ccc;
+    background-color: #f5f5f5;
+    color: var(--azul-marino);
 }
 
 .item-carrito {
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid #eee;
-    padding: 12px 0;
-    font-size: 1.1rem;
+    border-bottom: 1px solid #eaeaea;
+    padding: 15px 0;
+    font-size: 1rem;
 }
 
 .total-carrito {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-top: 20px;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-top: 25px;
     text-align: right;
-    color: #ff6b81;
+    color: var(--azul-marino);
+    font-family: 'Playfair Display', serif;
 }
 
 .btn-whatsapp {
-    background-color: #25D366; /* Verde WhatsApp */
-    margin-top: 20px;
-    font-weight: bold;
-    font-size: 1.2rem;
+    background-color: var(--azul-marino); 
+    margin-top: 25px;
+    padding: 15px;
 }
 
 .btn-whatsapp:hover {
-    background-color: #1ebe57;
+    background-color: var(--dorado);
 }
 
 /* RESPONSIVE (CELULARES) */
 @media (max-width: 768px) {
     header {
-        padding: 60px 20px; /* Más espacio vertical en celular */
+        padding: 80px 20px 30px; 
     }
-    header h1 { font-size: 2.2rem; }
+    
+    .logo-cabecera {
+        width: 220px;
+    }
     
     #icono-carrito {
-        top: 15px;
-        right: 15px;
-        font-size: 1rem;
-        padding: 8px 15px;
+        top: 20px;
+        right: 50%;
+        transform: translateX(50%); /* Centrado en móviles */
+        font-size: 0.9rem;
+        padding: 8px 20px;
+    }
+    
+    #icono-carrito:hover {
+        transform: translateX(50%) translateY(-2px);
     }
     
     .tarjeta-producto {
-        width: 100%; /* Un producto por fila */
+        width: 100%; 
     }
-}
-
-/* ESTILOS PARA EL LOGO */
-.logo-contenedor {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px; /* Espacio entre el logo y el texto */
-    margin-bottom: 10px;
-}
-
-.logo-cabecera {
-    width: 65px; /* Ajustá este número si querés el logo más grande o chico */
-    height: auto;
-    border-radius: 10px; /* Opcional: redondea un poco los bordes de tu logo */
 }

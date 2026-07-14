@@ -3,18 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HappyBox - Cajas de Golosinas</title>
+    <title>Happy Box - Detalles que alegran momentos</title>
+    
+    <!-- Importamos tipografías elegantes desde Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Vinculamos el archivo de estilos -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<header>
-        <!-- Contenedor para alinear el logo y el título -->
+    <header>
+        <!-- El logo ahora es el protagonista de la cabecera -->
         <div class="logo-contenedor">
-            <img src="logo.png" alt="Logo de HappyBox" class="logo-cabecera">
-            <h1>HappyBox</h1>
+            <img src="logo.png" alt="Happy Box - Detalles que alegran momentos" class="logo-cabecera">
         </div>
-        <p>Cajas con golosinas listas para regalar</p>
         
         <!-- Botón para ver el pedido en cabecera -->
         <button id="icono-carrito" onclick="abrirCarrito()">
@@ -23,15 +28,17 @@
     </header>
 
     <div class="contenedor">
+        <!-- Catálogo de productos dinámico -->
         <div class="productos-completo" id="contenedor-productos">
-            <p>Cargando cajitas de golosinas...</p>
+            <p style="text-align: center; width: 100%; font-family: 'Montserrat', sans-serif;">Cargando catálogo exclusivo...</p>
         </div>
     </div>
 
+    <!-- ESTO ES EL CARRITO SEPARADO (Modal) -->
     <div id="panel-carrito-overlay" class="panel-oculto">
         <div class="panel-carrito-modal">
             <div class="cabecera-carrito">
-                <h2>Tu Pedido 🛒</h2>
+                <h2>Tu Pedido</h2>
                 <button class="btn-cerrar" onclick="cerrarCarrito()">X</button>
             </div>
             
@@ -45,6 +52,7 @@
         </div>
     </div>
 
+    <!-- Vinculamos el archivo de lógica -->
     <script src="script.js"></script>
 </body>
 </html>
