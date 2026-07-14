@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HappyBox - Cajas de Golosinas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header>
+        <h1>HappyBox 🎁</h1>
+        <p>Cajas con golosinas listas para regalar</p>
+        
+        <button id="icono-carrito" onclick="abrirCarrito()">
+            🛒 Mi Pedido (<span id="contador-carrito">0</span>)
+        </button>
+    </header>
+
+    <div class="contenedor">
+        <div class="productos-completo" id="contenedor-productos">
+            <p>Cargando cajitas de golosinas...</p>
+        </div>
+    </div>
+
+    <div id="panel-carrito-overlay" class="panel-oculto">
+        <div class="panel-carrito-modal">
+            <div class="cabecera-carrito">
+                <h2>Tu Pedido 🛒</h2>
+                <button class="btn-cerrar" onclick="cerrarCarrito()">X</button>
+            </div>
+            
+            <div id="lista-carrito">
+                <p>El carrito está vacío.</p>
+            </div>
+            <div class="total-carrito">
+                Total: $<span id="total-precio">0</span>
+            </div>
+            <button class="btn-whatsapp" onclick="enviarPedidoWhatsApp()">Finalizar y pedir por WhatsApp</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

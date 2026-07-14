@@ -1,0 +1,206 @@
+/* ESTILOS GENERALES */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fcfcfc;
+    color: #333;
+}
+
+header {
+    background-color: #ff6b81;
+    color: white;
+    text-align: center;
+    padding: 30px; /* Más espacio */
+    position: relative; /* Para el botón del carrito */
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.8rem; /* Un poco más grande */
+}
+
+/* Nuevo botón del carrito en cabecera */
+#icono-carrito {
+    background-color: #25D366; /* Un color que combine, o #ff4757 */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    display: flex;
+    gap: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+}
+
+#icono-carrito:hover {
+    transform: scale(1.05);
+}
+
+.contenedor {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 15px;
+}
+
+/* CATÁLOGO DE PRODUCTOS (Ocupa todo el ancho) */
+.productos-completo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px; /* Más espacio */
+    justify-content: center; /* Centrar productos */
+}
+
+.tarjeta-producto {
+    background: white;
+    border-radius: 12px; /* Bordes más redondeados */
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    padding: 18px;
+    width: calc(33.33% - 40px); /* 3 productos por fila en escritorio */
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.tarjeta-producto img {
+    max-width: 100%;
+    height: 220px; /* Un poco más grandes */
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.precio {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #ff6b81;
+    margin: 12px 0;
+}
+
+button {
+    background-color: #ff6b81;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    width: 100%;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #ff4757;
+}
+
+/* LA VENTANA SEPARADA DEL CARRITO (EL MODAL) */
+#panel-carrito-overlay {
+    position: fixed; /* Ocupa toda la pantalla, fijo */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro translúcido */
+    display: flex;
+    justify-content: center; /* Centrado horizontal */
+    align-items: center; /* Centrado vertical */
+    z-index: 1000; /* Por encima de todo */
+    opacity: 0; /* Oculto inicialmente con animación */
+    visibility: hidden;
+    transition: 0.3s;
+}
+
+/* Clase para mostrar el carrito con animación */
+#panel-carrito-overlay.panel-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.panel-carrito-modal {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 600px; /* Ancho máximo de la ventana */
+    max-height: 80vh; /* Alto máximo (80% del alto de pantalla) */
+    overflow-y: auto; /* Scroll interno si hay muchos productos */
+    position: relative; /* Para el botón cerrar */
+}
+
+.cabecera-carrito {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ff6b81;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+}
+
+.cabecera-carrito h2 {
+    margin: 0;
+}
+
+.btn-cerrar {
+    background-color: #eee;
+    color: #555;
+    width: auto;
+    padding: 8px 12px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border-radius: 50%; /* Botón circular */
+}
+
+.btn-cerrar:hover {
+    background-color: #ccc;
+}
+
+.item-carrito {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    padding: 12px 0;
+    font-size: 1.1rem;
+}
+
+.total-carrito {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: right;
+    color: #ff6b81;
+}
+
+.btn-whatsapp {
+    background-color: #25D366; /* Verde WhatsApp */
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.btn-whatsapp:hover {
+    background-color: #1ebe57;
+}
+
+/* RESPONSIVE (CELULARES) */
+@media (max-width: 768px) {
+    header {
+        padding: 60px 20px; /* Más espacio vertical en celular */
+    }
+    header h1 { font-size: 2.2rem; }
+    
+    #icono-carrito {
+        top: 15px;
+        right: 15px;
+        font-size: 1rem;
+        padding: 8px 15px;
+    }
+    
+    .tarjeta-producto {
+        width: 100%; /* Un producto por fila */
+    }
+}
