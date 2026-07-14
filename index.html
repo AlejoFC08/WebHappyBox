@@ -15,17 +15,47 @@
 </head>
 <body>
 
-    <header>
-        <!-- El logo ahora es el protagonista de la cabecera -->
+<header class="cabecera-principal">
+        <!-- Izquierda: Logo -->
         <div class="logo-contenedor">
-            <img src="logo.png" alt="Happy Box - Detalles que alegran momentos" class="logo-cabecera">
+            <img src="logo.png" alt="Happy Box" class="logo-cabecera">
         </div>
+
+        <!-- Centro: Botones de navegación -->
+        <nav class="navegacion">
+            <a href="#">Inicio</a>
+            <a href="#contenedor-productos">Productos</a>
+            <a href="#">Nosotros</a>
+            <a href="#">Contacto</a>
+        </nav>
         
-        <!-- Botón para ver el pedido en cabecera -->
+        <!-- Derecha: Carrito -->
         <button id="icono-carrito" onclick="abrirCarrito()">
             🛒 Mi Pedido (<span id="contador-carrito">0</span>)
         </button>
     </header>
+
+<!-- =========================================
+         HERO SECTION (BANNER PRINCIPAL)
+         ========================================= -->
+    <section class="hero">
+        <div class="hero-contenido">
+            <h2>Regalá momentos inolvidables</h2>
+            <p>Sorprendé a esa persona especial con nuestras cajas personalizadas, preparadas con amor y una presentación impecable.</p>
+            <a href="#contenedor-productos" class="btn-hero">Ver Catálogo</a>
+        </div>
+    </section>
+
+    <!-- =========================================
+         SECCIÓN NOSOTROS
+         ========================================= -->
+    <section class="nosotros">
+        <div class="contenedor-nosotros">
+            <h2>Cuidamos cada detalle</h2>
+            <p>En HappyBox creemos que un regalo es mucho más que un objeto; es una demostración de afecto. Por eso, preparamos cada caja de golosinas a mano, seleccionando los mejores productos y asegurando una presentación elegante para que tu sorpresa sea perfecta.</p>
+        </div>
+    </section>
+
 
     <div class="contenedor">
         <!-- Catálogo de productos dinámico -->
@@ -51,6 +81,36 @@
             <button class="btn-whatsapp" onclick="enviarPedidoWhatsApp()">Finalizar y pedir por WhatsApp</button>
         </div>
     </div>
+
+    <!-- =========================================
+         FOOTER (PIE DE PÁGINA)
+         ========================================= -->
+    <footer>
+        <div class="footer-contenido">
+            <div class="footer-columna">
+                <!-- Reutilizamos tu logo -->
+                <img src="logo.png" alt="Happy Box Logo" class="logo-footer">
+                <p>Detalles que alegran momentos.</p>
+            </div>
+            <div class="footer-columna">
+                <h3>Contacto</h3>
+                <p>📍 Zona de envíos: Capital Federal y GBA</p>
+                <p>🕒 Horarios: Lun a Sáb de 9 a 18hs</p>
+                <p>✉️ contacto@happybox.com</p>
+            </div>
+            <div class="footer-columna">
+                <h3>Redes Sociales</h3>
+                <div class="redes-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">TikTok</a>
+                    <a href="#">WhatsApp</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 HappyBox. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 
     <!-- Vinculamos el archivo de lógica -->
     <script src="script.js"></script>
