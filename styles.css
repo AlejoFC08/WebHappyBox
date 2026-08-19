@@ -243,9 +243,89 @@ button:hover {
 .item-carrito {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
     border-bottom: 1px solid #eaeaea;
     padding: 15px 0;
     font-size: 1rem;
+}
+
+.item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.item-nombre {
+    font-weight: 600;
+}
+
+.item-subtotal {
+    color: var(--dorado-oscuro);
+    font-size: 0.9rem;
+}
+
+.item-controles {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-cantidad {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: var(--fondo-claro);
+    color: var(--azul-marino);
+    border: 1px solid #ddd;
+    font-size: 1.1rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-cantidad:hover {
+    background-color: var(--azul-marino);
+    color: white;
+}
+
+.cantidad-numero {
+    min-width: 20px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.btn-eliminar {
+    width: auto;
+    background-color: transparent;
+    color: #b33;
+    padding: 5px 8px;
+    font-size: 1rem;
+    margin-left: 6px;
+}
+
+.btn-eliminar:hover {
+    background-color: #fbeaea;
+}
+
+.btn-vaciar {
+    display: block;
+    width: auto;
+    background-color: transparent;
+    color: #999;
+    border: 1px solid #ddd;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    margin: 15px 0 0 auto;
+}
+
+.btn-vaciar:hover {
+    background-color: #fbeaea;
+    color: #b33;
+    border-color: #b33;
 }
 
 .total-carrito {

@@ -1,8 +1,25 @@
 // URL de tu API de Google Apps Script
 const API_URL = "https://script.google.com/macros/s/AKfycbyYGk-Me7wbjak3NDBnP06hw3UKftMxU4143nyBKIN5-lsrSYjPw11HBJqKsLMJcsUj/exec";
 
-let carrito = [];
+const CLAVE_CARRITO = 'happybox_carrito';
+
+let carrito = cargarCarritoGuardado();
 let productosDisponibles = [];
+
+// Recuperar el carrito guardado en el navegador (si existe)
+function cargarCarritoGuardado() {
+    try {
+        const guardado = localStorage.getItem(CLAVE_CARRITO);
+        return guardado ? JSON.parse(guardado) : [];
+    } catch (error) {
+        return [];
+    }
+}
+
+// Persistir el carrito en el navegador
+function guardarCarrito() {
+    localStorage.setItem(CLAVE_CARRITO, JSON.stringify(carrito));
+}
 
 // Cargar productos desde Google Sheets
 async function cargarProductos() {
@@ -45,7 +62,7 @@ function mostrarProductos(productos) {
 // Agregar ítems al carrito
 function agregarAlCarrito(id, nombre, precio) {
     const itemExistente = carrito.find(item => item.id === id);
-    
+
     if (itemExistente) {
         itemExistente.cantidad += 1;
     } else {
@@ -54,12 +71,50 @@ function agregarAlCarrito(id, nombre, precio) {
     actualizarInterfazCarrito();
 }
 
+// Sumar una unidad a un ítem ya agregado
+function incrementarCantidad(id) {
+    const item = carrito.find(item => item.id === id);
+    if (item) {
+        item.cantidad += 1;
+        actualizarInterfazCarrito();
+    }
+}
+
+// Restar una unidad; si llega a 0, se quita del carrito
+function decrementarCantidad(id) {
+    const item = carrito.find(item => item.id === id);
+    if (!item) return;
+
+    item.cantidad -= 1;
+    if (item.cantidad <= 0) {
+        eliminarDelCarrito(id);
+    } else {
+        actualizarInterfazCarrito();
+    }
+}
+
+// Quitar un producto del carrito por completo
+function eliminarDelCarrito(id) {
+    carrito = carrito.filter(item => item.id !== id);
+    actualizarInterfazCarrito();
+}
+
+// Vaciar todo el carrito
+function vaciarCarrito() {
+    if (carrito.length === 0) return;
+    if (confirm('¿Vaciar todo el carrito?')) {
+        carrito = [];
+        actualizarInterfazCarrito();
+    }
+}
+
 // Actualizar el panel del carrito y el contador de cabecera
 function actualizarInterfazCarrito() {
     const lista = document.getElementById('lista-carrito');
     const totalSpan = document.getElementById('total-precio');
     const contadorCabecera = document.getElementById('contador-carrito');
-    
+    const btnVaciar = document.getElementById('btn-vaciar-carrito');
+
     lista.innerHTML = '';
     let total = 0;
     let totalProductos = 0;
@@ -71,18 +126,29 @@ function actualizarInterfazCarrito() {
             const subtotal = item.precio * item.cantidad;
             total += subtotal;
             totalProductos += item.cantidad;
-            
+
             lista.innerHTML += `
                 <div class="item-carrito">
-                    <span>${item.cantidad}x ${item.nombre}</span>
-                    <span>$${subtotal}</span>
+                    <div class="item-info">
+                        <span class="item-nombre">${item.nombre}</span>
+                        <span class="item-subtotal">$${subtotal}</span>
+                    </div>
+                    <div class="item-controles">
+                        <button class="btn-cantidad" onclick="decrementarCantidad('${item.id}')" aria-label="Restar unidad">−</button>
+                        <span class="cantidad-numero">${item.cantidad}</span>
+                        <button class="btn-cantidad" onclick="incrementarCantidad('${item.id}')" aria-label="Sumar unidad">+</button>
+                        <button class="btn-eliminar" onclick="eliminarDelCarrito('${item.id}')" aria-label="Quitar producto">🗑</button>
+                    </div>
                 </div>
             `;
         });
     }
-    
+
     totalSpan.innerText = total;
     contadorCabecera.innerText = totalProductos; // Actualiza el botón de la cabecera
+    btnVaciar.style.display = carrito.length === 0 ? 'none' : 'block';
+
+    guardarCarrito();
 }
 
 // LÓGICA DE LA VENTANA SEPARADA (MODAL)
@@ -132,3 +198,4 @@ function enviarPedidoWhatsApp() {
 
 // Inicializar la carga al abrir la web
 cargarProductos();
+actualizarInterfazCarrito(); // Refleja el carrito guardado (si había uno) apenas carga la página
