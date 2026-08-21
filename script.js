@@ -151,6 +151,7 @@ function actualizarInterfazCarrito() {
 
     totalSpan.innerText = total;
     contadorCabecera.innerText = totalProductos; // Actualiza el botón de la cabecera
+    contadorCabecera.classList.toggle('badge-oculta', totalProductos === 0);
 }
 
 // LÓGICA DE LA VENTANA SEPARADA (MODAL)

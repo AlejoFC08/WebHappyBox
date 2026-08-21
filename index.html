@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     
     <!-- Vinculamos el archivo de estilos -->
-    <link rel="stylesheet" href="styles.css?v=2">
+    <link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
 
@@ -30,8 +30,9 @@
         </nav>
         
         <!-- Derecha: Carrito -->
-        <button id="icono-carrito" onclick="abrirCarrito()">
-            🛒 Mi Pedido (<span id="contador-carrito">0</span>)
+        <button id="icono-carrito" onclick="abrirCarrito()" aria-label="Ver mi pedido">
+            🛒
+            <span id="contador-carrito" class="badge-carrito">0</span>
         </button>
     </header>
 
@@ -91,23 +92,25 @@
          ========================================= -->
     <footer>
         <div class="footer-contenido">
-            <div class="footer-columna">
+            <div class="footer-columna footer-marca">
                 <!-- Reutilizamos tu logo -->
                 <img src="logo.png" alt="Happy Box Logo" class="logo-footer">
                 <p>Detalles que alegran momentos.</p>
             </div>
             <div class="footer-columna">
                 <h3>Contacto</h3>
-                <p>📍 Zona de envíos: Capital Federal y GBA</p>
-                <p>🕒 Horarios: Lun a Sáb de 9 a 18hs</p>
-                <p>✉️ contacto@happybox.com</p>
+                <ul class="footer-lista">
+                    <li><span class="footer-icono">📍</span> Zona de envíos: Capital Federal y GBA</li>
+                    <li><span class="footer-icono">🕒</span> Lun a Sáb de 9 a 18hs</li>
+                    <li><span class="footer-icono">✉️</span> contacto@happybox.com</li>
+                </ul>
             </div>
             <div class="footer-columna">
-                <h3>Redes Sociales</h3>
+                <h3>Seguinos</h3>
                 <div class="redes-links">
-                    <a href="#">Instagram</a>
-                    <a href="#">TikTok</a>
-                    <a href="#">WhatsApp</a>
+                    <a href="#" class="red-social" aria-label="Instagram">📷</a>
+                    <a href="#" class="red-social" aria-label="TikTok">🎵</a>
+                    <a href="#" class="red-social" aria-label="WhatsApp">💬</a>
                 </div>
             </div>
         </div>
@@ -116,6 +119,6 @@
         </div>
     </footer>
 
-    <script src="script.js?v=4"></script>
+    <script src="script.js?v=5"></script>
 </body>
 </html>
