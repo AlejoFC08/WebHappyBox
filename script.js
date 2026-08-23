@@ -5,8 +5,8 @@ const API_URL = "https://script.google.com/macros/s/AKfycbyYGk-Me7wbjak3NDBnP06h
 const IMAGEN_RESPALDO = "data:image/svg+xml;utf8," + encodeURIComponent(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
   <rect width="200" height="200" fill="#FCFBF9"/>
-  <rect x="40" y="90" width="120" height="80" rx="4" fill="#6E1F2B"/>
-  <rect x="40" y="90" width="120" height="22" fill="#4A141C"/>
+  <rect x="40" y="90" width="120" height="80" rx="4" fill="#800311"/>
+  <rect x="40" y="90" width="120" height="22" fill="#5C020C"/>
   <rect x="92" y="90" width="16" height="80" fill="#C6A664"/>
   <rect x="40" y="112" width="120" height="16" fill="#C6A664"/>
   <path d="M100 90 C80 60, 55 65, 60 85 C65 100, 90 95, 100 90 Z" fill="#C6A664"/>

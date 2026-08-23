@@ -2,8 +2,8 @@
    PALETA DE COLORES Y ESTILOS GENERALES
    ========================================= */
 :root {
-    --bordo: #6E1F2B; /* Color principal de marca */
-    --bordo-oscuro: #4A141C;
+    --bordo: #800311; /* Color principal de marca, tomado del logo */
+    --bordo-oscuro: #5C020C;
     --dorado: #C6A664; /* Acento cálido, complementa al bordo */
     --dorado-oscuro: #ab8e53;
     --fondo-claro: #FCFBF9; /* Blanco apenas cálido */
@@ -56,7 +56,7 @@ h1, h2, h3, .precio {
 }
 
 .logo-cabecera {
-    width: 110px; /* Tamaño del logo en la barra */
+    width: 165px; /* El isotipo nuevo es un wordmark ancho, no un ícono cuadrado */
     height: auto;
 }
 
@@ -164,7 +164,7 @@ h1, h2, h3, .precio {
 
 .tarjeta-producto:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(110, 31, 43, 0.08);
+    box-shadow: 0 12px 25px rgba(128, 3, 17, 0.08);
 }
 
 .tarjeta-producto img {
@@ -237,7 +237,7 @@ button:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(110, 31, 43, 0.8); 
+    background-color: rgba(128, 3, 17, 0.8); 
     display: flex;
     justify-content: center; 
     align-items: center; 
@@ -483,7 +483,7 @@ button:hover {
     }
     
     .logo-cabecera {
-        width: 130px; /* Logo un poquito más grande en celu */
+        width: 190px; /* Logo un poquito más grande en celu */
     }
 
     .navegacion {
@@ -509,7 +509,7 @@ button:hover {
 
 .hero-slide {
     /* Fondo con gradiente en bordo para que el texto blanco sea legible, sumado a una imagen de regalos */
-    background-image: linear-gradient(rgba(110, 31, 43, 0.75), rgba(110, 31, 43, 0.75)), url('https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=2040&auto=format&fit=crop');
+    background-image: linear-gradient(rgba(128, 3, 17, 0.75), rgba(128, 3, 17, 0.75)), url('https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=2040&auto=format&fit=crop');
     background-size: cover;
     background-position: center;
     position: absolute;
@@ -711,7 +711,7 @@ button:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(110, 31, 43, 0.55);
+    background-color: rgba(128, 3, 17, 0.55);
     color: white;
     font-weight: 600;
     font-size: 0.9rem;
@@ -727,7 +727,7 @@ button:hover {
 
 .destacado-tarjeta:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(110, 31, 43, 0.1);
+    box-shadow: 0 12px 25px rgba(128, 3, 17, 0.1);
 }
 
 .destacado-tarjeta img {
@@ -823,7 +823,7 @@ button:hover {
 
 .categoria-tile:hover {
     transform: translateY(-6px);
-    box-shadow: 0 14px 28px rgba(110, 31, 43, 0.1);
+    box-shadow: 0 14px 28px rgba(128, 3, 17, 0.1);
 }
 
 .categoria-tile-icono {
@@ -946,12 +946,12 @@ footer {
     color: #b8bfc7;
 }
 
-/* Le ponemos un fondito blanco al logo para que no se pierda en el bordo oscuro */
+/* Le ponemos un fondito blanco al logo: es un wordmark bordo y se perdería sobre el footer bordo */
 .logo-footer {
-    width: 150px;
+    width: 220px;
     background-color: #ffffff;
-    padding: 12px;
-    border-radius: 8px;
+    padding: 16px 22px;
+    border-radius: 10px;
     margin-bottom: 15px;
 }
 
