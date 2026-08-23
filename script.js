@@ -5,8 +5,8 @@ const API_URL = "https://script.google.com/macros/s/AKfycbyYGk-Me7wbjak3NDBnP06h
 const IMAGEN_RESPALDO = "data:image/svg+xml;utf8," + encodeURIComponent(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
   <rect width="200" height="200" fill="#FCFBF9"/>
-  <rect x="40" y="90" width="120" height="80" rx="4" fill="#1C2836"/>
-  <rect x="40" y="90" width="120" height="22" fill="#161f29"/>
+  <rect x="40" y="90" width="120" height="80" rx="4" fill="#6E1F2B"/>
+  <rect x="40" y="90" width="120" height="22" fill="#4A141C"/>
   <rect x="92" y="90" width="16" height="80" fill="#C6A664"/>
   <rect x="40" y="112" width="120" height="16" fill="#C6A664"/>
   <path d="M100 90 C80 60, 55 65, 60 85 C65 100, 90 95, 100 90 Z" fill="#C6A664"/>
@@ -60,6 +60,7 @@ async function cargarProductos() {
         const productos = await respuesta.json();
         productosDisponibles = productos;
         mostrarCatalogoPorCategorias(productos);
+        mostrarDestacados(productos);
     } catch (error) {
         Object.values(CATEGORIAS).forEach(cat => {
             const contenedor = document.getElementById(cat.contenedorId);
@@ -68,6 +69,65 @@ async function cargarProductos() {
             }
         });
     }
+}
+
+// Home: mostrar unos pocos productos destacados (los primeros con nombre)
+const CANTIDAD_DESTACADOS = 4;
+
+function mostrarDestacados(productos) {
+    const contenedor = document.getElementById('contenedor-destacados');
+    if (!contenedor) return;
+
+    contenedor.innerHTML = '';
+    let mostrados = 0;
+
+    productos.forEach((producto, indice) => {
+        if (mostrados >= CANTIDAD_DESTACADOS || !producto.nombre) return;
+
+        producto._key = (producto.id !== undefined && producto.id !== null && producto.id !== '')
+            ? String(producto.id)
+            : 'idx' + indice;
+
+        const imagenSrc = producto.imagen ? producto.imagen : IMAGEN_RESPALDO;
+        const tarjeta = document.createElement('div');
+        tarjeta.className = 'destacado-tarjeta';
+        tarjeta.innerHTML = `
+            <img src="${imagenSrc}" alt="${producto.nombre}" onerror="this.onerror=null;this.src='${IMAGEN_RESPALDO}';">
+            <div class="destacado-banner">
+                <h3>${producto.nombre}</h3>
+                <span class="destacado-precio">$${producto.precio}</span>
+            </div>
+        `;
+        tarjeta.addEventListener('click', () => agregarAlCarrito(producto._key));
+        contenedor.appendChild(tarjeta);
+        mostrados += 1;
+    });
+}
+
+// CARRUSEL DEL HERO (home)
+let heroSlideActual = 0;
+
+function mostrarSlideHero(indice) {
+    const slides = document.querySelectorAll('.hero-slide');
+    const puntos = document.querySelectorAll('.hero-punto');
+    if (slides.length === 0) return;
+
+    heroSlideActual = (indice + slides.length) % slides.length;
+
+    slides.forEach((slide, i) => slide.classList.toggle('hero-slide-activo', i === heroSlideActual));
+    puntos.forEach((punto, i) => punto.classList.toggle('hero-punto-activo', i === heroSlideActual));
+}
+
+function cambiarSlideHero(delta) {
+    mostrarSlideHero(heroSlideActual + delta);
+}
+
+function irASlideHero(indice) {
+    mostrarSlideHero(indice);
+}
+
+if (document.querySelector('.hero-carrusel')) {
+    setInterval(() => cambiarSlideHero(1), 6000);
 }
 
 // Renderizar cada producto en la sección de su categoría correspondiente
@@ -280,6 +340,6 @@ function enviarPedidoWhatsApp() {
 // interfaz y, si la página tiene catálogo, se cargan los productos.
 cargarCarritoStorage();
 actualizarInterfazCarrito();
-if (document.getElementById('contenedor-cajas')) {
+if (document.getElementById('contenedor-cajas') || document.getElementById('contenedor-destacados')) {
     cargarProductos();
 }

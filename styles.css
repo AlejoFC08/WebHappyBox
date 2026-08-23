@@ -2,8 +2,9 @@
    PALETA DE COLORES Y ESTILOS GENERALES
    ========================================= */
 :root {
-    --azul-marino: #1C2836; /* Color de la caja */
-    --dorado: #C6A664; /* Color del moño */
+    --bordo: #6E1F2B; /* Color principal de marca */
+    --bordo-oscuro: #4A141C;
+    --dorado: #C6A664; /* Acento cálido, complementa al bordo */
     --dorado-oscuro: #ab8e53;
     --fondo-claro: #FCFBF9; /* Blanco apenas cálido */
     --texto-oscuro: #333333;
@@ -24,7 +25,7 @@ body {
 /* TIPOGRAFÍAS PARA TÍTULOS */
 h1, h2, h3, .precio {
     font-family: 'Playfair Display', serif;
-    color: var(--azul-marino);
+    color: var(--bordo);
     font-weight: 600;
 }
 
@@ -67,7 +68,7 @@ h1, h2, h3, .precio {
 
 .navegacion a {
     text-decoration: none;
-    color: var(--azul-marino);
+    color: var(--bordo);
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;
     font-size: 0.95rem;
@@ -84,7 +85,7 @@ h1, h2, h3, .precio {
 #icono-carrito {
     position: relative;
     background-color: transparent;
-    color: var(--azul-marino);
+    color: var(--bordo);
     border: 1px solid #eaeaea;
     width: 46px;
     height: 46px;
@@ -163,7 +164,7 @@ h1, h2, h3, .precio {
 
 .tarjeta-producto:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(28, 40, 54, 0.08);
+    box-shadow: 0 12px 25px rgba(110, 31, 43, 0.08);
 }
 
 .tarjeta-producto img {
@@ -209,7 +210,7 @@ h1, h2, h3, .precio {
 
 /* BOTÓN DE AGREGAR AL CARRITO (GLOBAL) */
 button {
-    background-color: var(--azul-marino);
+    background-color: var(--bordo);
     color: white;
     border: none;
     padding: 12px 18px;
@@ -236,7 +237,7 @@ button:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(28, 40, 54, 0.8); 
+    background-color: rgba(110, 31, 43, 0.8); 
     display: flex;
     justify-content: center; 
     align-items: center; 
@@ -290,7 +291,7 @@ button:hover {
 
 .btn-cerrar:hover {
     background-color: #f5f5f5;
-    color: var(--azul-marino);
+    color: var(--bordo);
 }
 
 /* Cuerpo con scroll propio: el header y el pie quedan siempre visibles */
@@ -327,7 +328,7 @@ button:hover {
 
 .item-nombre {
     font-weight: 600;
-    color: var(--azul-marino);
+    color: var(--bordo);
 }
 
 .item-precio-unitario {
@@ -339,7 +340,7 @@ button:hover {
     grid-column: 3;
     grid-row: 1;
     font-weight: 600;
-    color: var(--azul-marino);
+    color: var(--bordo);
     justify-self: end;
 }
 
@@ -357,7 +358,7 @@ button:hover {
     padding: 0;
     border-radius: 50%;
     background-color: var(--fondo-claro);
-    color: var(--azul-marino);
+    color: var(--bordo);
     border: 1px solid #e0d9cb;
     font-size: 1rem;
     line-height: 1;
@@ -439,12 +440,12 @@ button:hover {
     font-weight: 600;
     margin-top: 10px;
     text-align: right;
-    color: var(--azul-marino);
+    color: var(--bordo);
     font-family: 'Playfair Display', serif;
 }
 
 .btn-whatsapp {
-    background-color: var(--azul-marino);
+    background-color: var(--bordo);
     margin-top: 18px;
     padding: 15px;
 }
@@ -497,21 +498,36 @@ button:hover {
 }
 
 /* =========================================
-   HERO SECTION (BANNER PRINCIPAL)
+   HERO CARRUSEL (BANNER PRINCIPAL)
    ========================================= */
-.hero {
-    /* Fondo con gradiente oscuro para que el texto blanco sea legible, sumado a una imagen de regalos */
-    background-image: linear-gradient(rgba(28, 40, 54, 0.7), rgba(28, 40, 54, 0.7)), url('https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=2040&auto=format&fit=crop');
+.hero-carrusel {
+    position: relative;
+    height: 60vh;
+    min-height: 450px;
+    overflow: hidden;
+}
+
+.hero-slide {
+    /* Fondo con gradiente en bordo para que el texto blanco sea legible, sumado a una imagen de regalos */
+    background-image: linear-gradient(rgba(110, 31, 43, 0.75), rgba(110, 31, 43, 0.75)), url('https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=2040&auto=format&fit=crop');
     background-size: cover;
     background-position: center;
-    height: 60vh; /* Ocupa el 60% del alto de la pantalla */
-    min-height: 450px;
+    position: absolute;
+    inset: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     color: white;
     padding: 0 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s ease;
+}
+
+.hero-slide-activo {
+    opacity: 1;
+    visibility: visible;
 }
 
 .hero-contenido h2 {
@@ -549,6 +565,198 @@ button:hover {
     background-color: var(--dorado-oscuro);
     transform: translateY(-3px);
     box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.hero-flecha {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    font-size: 1.6rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-flecha:hover {
+    background-color: rgba(255,255,255,0.3);
+}
+
+.hero-flecha-izq {
+    left: 20px;
+}
+
+.hero-flecha-der {
+    right: 20px;
+}
+
+.hero-puntos {
+    position: absolute;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    display: flex;
+    gap: 10px;
+}
+
+.hero-punto {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: rgba(255,255,255,0.4);
+    border: none;
+}
+
+.hero-punto-activo {
+    background-color: var(--dorado);
+}
+
+@media (max-width: 600px) {
+    .hero-flecha {
+        display: none; /* En mobile el texto puede ocupar varias líneas y las flechas quedaban encima */
+    }
+}
+
+/* =========================================
+   FRANJA DE CONFIANZA
+   ========================================= */
+.confianza-franja {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+}
+
+.confianza-item {
+    flex: 1 1 260px;
+    max-width: 320px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.confianza-icono {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+}
+
+.confianza-item h3 {
+    font-size: 1rem;
+    margin: 0 0 5px;
+}
+
+.confianza-item p {
+    font-size: 0.88rem;
+    color: #666;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* =========================================
+   DESTACADOS (home)
+   ========================================= */
+.destacados-seccion {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 20px 90px;
+    text-align: center;
+}
+
+.destacados-titulo {
+    font-size: 2rem;
+    margin-bottom: 40px;
+}
+
+.destacados-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+}
+
+.destacado-tarjeta {
+    width: calc(25% - 23px);
+    min-width: 220px;
+    flex: 1 1 220px;
+    max-width: 270px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.destacado-tarjeta::after {
+    content: '+ Agregar al pedido';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 190px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(110, 31, 43, 0.55);
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.3px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.destacado-tarjeta:hover::after {
+    opacity: 1;
+}
+
+.destacado-tarjeta:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(110, 31, 43, 0.1);
+}
+
+.destacado-tarjeta img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+}
+
+.destacado-banner {
+    background-color: var(--bordo);
+    color: white;
+    padding: 16px 14px;
+}
+
+.destacado-banner h3 {
+    color: white;
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 6px;
+}
+
+.destacado-precio {
+    color: var(--dorado);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
 }
 
 /* =========================================
@@ -615,7 +823,7 @@ button:hover {
 
 .categoria-tile:hover {
     transform: translateY(-6px);
-    box-shadow: 0 14px 28px rgba(28, 40, 54, 0.1);
+    box-shadow: 0 14px 28px rgba(110, 31, 43, 0.1);
 }
 
 .categoria-tile-icono {
@@ -644,7 +852,7 @@ button:hover {
 
 /* Encabezado del catálogo (página productos.html) */
 .catalogo-hero {
-    background-color: var(--azul-marino);
+    background-color: var(--bordo);
     color: white;
     text-align: center;
     padding: 55px 20px;
@@ -715,7 +923,7 @@ button:hover {
    FOOTER (PIE DE PÁGINA)
    ========================================= */
 footer {
-    background-color: var(--azul-marino);
+    background-color: var(--bordo);
     color: white;
     padding: 65px 20px 0;
     margin-top: 60px;
@@ -727,7 +935,7 @@ footer {
     max-width: 1200px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr;
+    grid-template-columns: 1.2fr 1fr 1fr 1fr;
     gap: 40px;
     padding-bottom: 45px;
 }
@@ -738,7 +946,7 @@ footer {
     color: #b8bfc7;
 }
 
-/* Le ponemos un fondito blanco al logo para que no se pierda en el azul oscuro */
+/* Le ponemos un fondito blanco al logo para que no se pierda en el bordo oscuro */
 .logo-footer {
     width: 150px;
     background-color: #ffffff;
@@ -772,6 +980,16 @@ footer {
     font-size: 0.9rem;
     color: #b8bfc7;
     line-height: 1.5;
+}
+
+.footer-lista-links a {
+    color: #b8bfc7;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-lista-links a:hover {
+    color: var(--dorado);
 }
 
 .footer-icono {
@@ -827,6 +1045,15 @@ footer {
 
     .categorias-titulo {
         font-size: 1.6rem;
+    }
+
+    .destacados-titulo {
+        font-size: 1.6rem;
+    }
+
+    .confianza-item {
+        flex: 1 1 100%;
+        max-width: 400px;
     }
 
     .catalogo-hero h1 {
