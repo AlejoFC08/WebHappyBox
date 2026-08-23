@@ -479,7 +479,10 @@ button:hover {
     .cabecera-principal {
         flex-direction: column; /* Apila los elementos hacia abajo */
         gap: 15px;
-        padding: 20px; 
+        padding: 20px;
+        /* En celu el header apilado queda muy alto: si sigue "sticky" puede tapar
+           el pie de página al llegar al final del scroll sin dejar forma de destaparlo */
+        position: static;
     }
     
     .logo-cabecera {
