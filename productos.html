@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Box - Detalles que alegran momentos</title>
-    
+    <title>Catálogo - Happy Box</title>
+
     <!-- Importamos tipografías elegantes desde Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    
+
     <!-- Vinculamos el archivo de estilos -->
     <link rel="stylesheet" href="styles.css?v=4">
 </head>
@@ -25,10 +25,10 @@
         <nav class="navegacion">
             <a href="index.html">Inicio</a>
             <a href="productos.html">Productos</a>
-            <a href="#nosotros">Nosotros</a>
+            <a href="index.html#nosotros">Nosotros</a>
             <a href="#pie-contacto">Contacto</a>
         </nav>
-        
+
         <!-- Derecha: Carrito -->
         <button id="icono-carrito" onclick="abrirCarrito()" aria-label="Ver mi pedido">
             🛒
@@ -36,53 +36,37 @@
         </button>
     </header>
 
-<!-- =========================================
-         HERO SECTION (BANNER PRINCIPAL)
+    <!-- =========================================
+         ENCABEZADO DEL CATÁLOGO
          ========================================= -->
-    <section class="hero">
-        <div class="hero-contenido">
-            <h2>Regalá momentos inolvidables</h2>
-            <p>Sorprendé a esa persona especial con nuestras cajas personalizadas, preparadas con amor y una presentación impecable.</p>
-            <a href="productos.html" class="btn-hero">Ver Catálogo</a>
-        </div>
+    <section class="catalogo-hero">
+        <h1>Nuestro Catálogo</h1>
+        <p>Elegí una categoría y armá tu pedido a medida.</p>
+        <nav class="categoria-subnav">
+            <a href="#cat-cajas">Cajas con Golosinas</a>
+            <a href="#cat-ramos">Ramos de Golosinas</a>
+            <a href="#cat-armados">Armados Especiales</a>
+        </nav>
     </section>
 
-    <!-- =========================================
-         SECCIÓN NOSOTROS
-         ========================================= -->
-    <section class="nosotros" id="nosotros">
-        <div class="contenedor-nosotros">
-            <h2>Cuidamos cada detalle</h2>
-            <p>En HappyBox creemos que un regalo es mucho más que un objeto; es una demostración de afecto. Por eso, preparamos cada caja de golosinas a mano, seleccionando los mejores productos y asegurando una presentación elegante para que tu sorpresa sea perfecta.</p>
-        </div>
-    </section>
+    <div class="contenedor">
+        <section class="categoria-seccion" id="cat-cajas">
+            <h2>Cajas con Golosinas</h2>
+            <div class="productos-completo" id="contenedor-cajas">
+                <p class="categoria-vacia">Cargando catálogo exclusivo...</p>
+            </div>
+        </section>
 
-    <!-- =========================================
-         CATEGORÍAS (acceso rápido al catálogo)
-         ========================================= -->
-    <section class="categorias-home">
-        <h2 class="categorias-titulo">Elegí tu HappyBox ideal</h2>
-        <div class="categorias-grid">
-            <a href="productos.html#cat-cajas" class="categoria-tile">
-                <span class="categoria-tile-icono">🎁</span>
-                <h3>Cajas con Golosinas</h3>
-                <p>Nuestras cajas clásicas, armadas a mano con una selección de golosinas.</p>
-                <span class="categoria-tile-link">Ver productos →</span>
-            </a>
-            <a href="productos.html#cat-ramos" class="categoria-tile">
-                <span class="categoria-tile-icono">💐</span>
-                <h3>Ramos de Golosinas</h3>
-                <p>Un regalo distinto: ramos armados con golosinas en vez de flores.</p>
-                <span class="categoria-tile-link">Ver productos →</span>
-            </a>
-            <a href="productos.html#cat-armados" class="categoria-tile">
-                <span class="categoria-tile-icono">✨</span>
-                <h3>Armados Especiales</h3>
-                <p>Propuestas a medida para ocasiones y pedidos personalizados.</p>
-                <span class="categoria-tile-link">Ver productos →</span>
-            </a>
-        </div>
-    </section>
+        <section class="categoria-seccion" id="cat-ramos">
+            <h2>Ramos de Golosinas</h2>
+            <div class="productos-completo" id="contenedor-ramos"></div>
+        </section>
+
+        <section class="categoria-seccion" id="cat-armados">
+            <h2>Armados Especiales</h2>
+            <div class="productos-completo" id="contenedor-armados"></div>
+        </section>
+    </div>
 
     <!-- ESTO ES EL CARRITO SEPARADO (Modal) -->
     <div id="panel-carrito-overlay" class="panel-oculto">
