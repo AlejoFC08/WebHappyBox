@@ -92,7 +92,6 @@ h1, h2, h3, .precio {
     padding: 0;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 1.3rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -104,6 +103,11 @@ h1, h2, h3, .precio {
     background-color: var(--fondo-claro);
     border-color: var(--dorado);
     transform: translateY(-2px);
+}
+
+.icono-bolsa {
+    width: 19px;
+    height: 19px;
 }
 
 .badge-carrito {
@@ -402,9 +406,10 @@ button:hover {
 }
 
 .carrito-vacio-icono {
-    font-size: 2.5rem;
+    width: 40px;
+    height: 40px;
     display: block;
-    margin-bottom: 10px;
+    margin: 0 auto 10px;
     opacity: 0.6;
 }
 

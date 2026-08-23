@@ -255,7 +255,10 @@ function actualizarInterfazCarrito() {
     if (carrito.length === 0) {
         lista.innerHTML = `
             <div class="carrito-vacio">
-                <span class="carrito-vacio-icono">🛒</span>
+                <svg class="carrito-vacio-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M6 8h12l-1 12a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1L6 8Z"/>
+                    <path d="M9 8V6.5a3 3 0 0 1 6 0V8"/>
+                </svg>
                 <p>Tu carrito está vacío.</p>
                 <p class="carrito-vacio-sub">Agregá alguna HappyBox del catálogo para empezar tu pedido.</p>
             </div>
