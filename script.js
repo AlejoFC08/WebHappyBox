@@ -13,14 +13,15 @@ const IMAGEN_RESPALDO = "data:image/svg+xml;utf8," + encodeURIComponent(`
   <path d="M100 90 C120 60, 145 65, 140 85 C135 100, 110 95, 100 90 Z" fill="#C6A664"/>
 </svg>`);
 
-// Categorías del catálogo. Para asignar un producto a "ramos" o "armados",
-// agregá una columna "categoria" en el Google Sheet con ese texto
-// (alguna variante de "ramo" o de "armado"/"especial"). Si la columna no
-// existe o está vacía, el producto se muestra en "Cajas con Golosinas".
+// Categorías del catálogo. Para asignar un producto a una categoría
+// agregá una columna "categoria" en el Google Sheet con el texto correspondiente
+// ("ramo", "taza", "dulce" o "salada"/"salado"). Si la columna no existe o no
+// coincide con ninguna, el producto se muestra en "Box Dulces" por defecto.
 const CATEGORIAS = {
-    cajas: { titulo: 'Cajas con Golosinas', contenedorId: 'contenedor-cajas' },
     ramos: { titulo: 'Ramos de Golosinas', contenedorId: 'contenedor-ramos' },
-    armados: { titulo: 'Armados Especiales', contenedorId: 'contenedor-armados' }
+    tazas: { titulo: 'Arreglos de Tazas', contenedorId: 'contenedor-tazas' },
+    dulces: { titulo: 'Box Dulces', contenedorId: 'contenedor-dulces' },
+    saladas: { titulo: 'Box Saladas', contenedorId: 'contenedor-saladas' }
 };
 
 const CARRITO_STORAGE_KEY = 'happybox-carrito';
@@ -31,8 +32,10 @@ let productosDisponibles = [];
 function categoriaDeProducto(producto) {
     const texto = (producto.categoria || '').toString().trim().toLowerCase();
     if (texto.includes('ramo')) return 'ramos';
-    if (texto.includes('armado') || texto.includes('especial')) return 'armados';
-    return 'cajas';
+    if (texto.includes('taza')) return 'tazas';
+    if (texto.includes('salada') || texto.includes('salado')) return 'saladas';
+    if (texto.includes('dulce')) return 'dulces';
+    return 'dulces';
 }
 
 // Guardar/recuperar el carrito en localStorage para que no se pierda al cambiar de página
@@ -146,7 +149,7 @@ function mostrarCatalogoPorCategorias(productos) {
 
     if (!hayContenedores) return; // Esta página no tiene catálogo (ej: la home)
 
-    const conteo = { cajas: 0, ramos: 0, armados: 0 };
+    const conteo = { ramos: 0, tazas: 0, dulces: 0, saladas: 0 };
 
     productos.forEach((producto, indice) => {
         if (!producto.nombre) return;
@@ -393,6 +396,6 @@ function enviarPedidoWhatsApp() {
 // interfaz y, si la página tiene catálogo, se cargan los productos.
 cargarCarritoStorage();
 actualizarInterfazCarrito();
-if (document.getElementById('contenedor-cajas') || document.getElementById('contenedor-destacados')) {
+if (document.getElementById('contenedor-ramos') || document.getElementById('contenedor-destacados')) {
     cargarProductos();
 }
