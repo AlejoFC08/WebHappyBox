@@ -29,6 +29,23 @@ const CARRITO_STORAGE_KEY = 'happybox-carrito';
 let carrito = [];
 let productosDisponibles = [];
 
+// Convierte un link de Google Drive (el que te da el botón "Compartir") en una
+// URL que se puede usar directo en un <img>. Así, en la planilla, en la columna
+// "imagen" podés pegar el link de Drive tal cual, sin pasar por postimg ni nada.
+// Si el link no es de Drive, lo devuelve sin cambios (sigue funcionando con
+// postimg.cc o cualquier otro link de imagen directo).
+function normalizarUrlImagen(url) {
+    if (!url) return url;
+    const texto = url.toString().trim();
+    if (!texto.includes('drive.google.com')) return texto;
+
+    const porRuta = texto.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+    const porQuery = texto.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    const id = porRuta ? porRuta[1] : (porQuery ? porQuery[1] : null);
+
+    return id ? `https://lh3.googleusercontent.com/d/${id}` : texto;
+}
+
 function categoriaDeProducto(producto) {
     const texto = (producto.categoria || '').toString().trim().toLowerCase();
     if (texto.includes('ramo')) return 'ramos';
@@ -61,6 +78,9 @@ async function cargarProductos() {
     try {
         const respuesta = await fetch(API_URL);
         const productos = await respuesta.json();
+        productos.forEach(producto => {
+            if (producto.imagen) producto.imagen = normalizarUrlImagen(producto.imagen);
+        });
         productosDisponibles = productos;
         mostrarCatalogoPorCategorias(productos);
         mostrarDestacados(productos);
