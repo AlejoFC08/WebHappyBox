@@ -98,7 +98,7 @@ function mostrarDestacados(productos) {
                 <span class="destacado-precio">$${producto.precio}</span>
             </div>
         `;
-        tarjeta.addEventListener('click', () => agregarAlCarrito(producto._key));
+        tarjeta.addEventListener('click', () => abrirDetalleProducto(producto._key));
         contenedor.appendChild(tarjeta);
         mostrados += 1;
     });
@@ -185,32 +185,82 @@ function crearTarjetaProducto(producto) {
         <h3>${producto.nombre}</h3>
         <p>${producto.descripcion}</p>
         <div class="precio">$${producto.precio}</div>
-        <button onclick="agregarAlCarrito('${producto._key}')">
-            Agregar al carrito
+        <button onclick="abrirDetalleProducto('${producto._key}')">
+            Ver producto
         </button>
     `;
     return tarjeta;
 }
 
 // Agregar ítems al carrito (busca los datos completos del producto por su clave)
-function agregarAlCarrito(key) {
+function agregarAlCarrito(key, cantidad = 1) {
     const producto = productosDisponibles.find(p => String(p._key) === String(key));
     if (!producto) return;
 
     const itemExistente = carrito.find(item => String(item.id) === String(key));
 
     if (itemExistente) {
-        itemExistente.cantidad += 1;
+        itemExistente.cantidad += cantidad;
     } else {
         carrito.push({
             id: String(key),
             nombre: producto.nombre,
             precio: producto.precio,
             imagen: producto.imagen || IMAGEN_RESPALDO,
-            cantidad: 1
+            cantidad: cantidad
         });
     }
     actualizarInterfazCarrito();
+}
+
+// MODAL DE DETALLE DE PRODUCTO (vista rápida antes de agregar al carrito)
+let detalleProductoKey = null;
+let detalleProductoCantidad = 1;
+
+function abrirDetalleProducto(key) {
+    const producto = productosDisponibles.find(p => String(p._key) === String(key));
+    if (!producto) return;
+
+    detalleProductoKey = key;
+    detalleProductoCantidad = 1;
+
+    const imagenSrc = producto.imagen ? producto.imagen : IMAGEN_RESPALDO;
+    const imagen = document.getElementById('detalle-producto-imagen');
+    imagen.src = imagenSrc;
+    imagen.alt = producto.nombre;
+    imagen.onerror = () => { imagen.onerror = null; imagen.src = IMAGEN_RESPALDO; };
+
+    document.getElementById('detalle-producto-nombre').innerText = producto.nombre;
+    document.getElementById('detalle-producto-descripcion').innerText = producto.descripcion || '';
+    document.getElementById('detalle-producto-precio').innerText = producto.precio;
+    document.getElementById('detalle-producto-cantidad').innerText = detalleProductoCantidad;
+
+    document.getElementById('panel-producto-overlay').classList.add('panel-visible');
+}
+
+function cerrarDetalleProducto() {
+    document.getElementById('panel-producto-overlay').classList.remove('panel-visible');
+}
+
+function cambiarCantidadModal(delta) {
+    detalleProductoCantidad = Math.max(1, detalleProductoCantidad + delta);
+    document.getElementById('detalle-producto-cantidad').innerText = detalleProductoCantidad;
+}
+
+function confirmarAgregarDesdeModal() {
+    if (!detalleProductoKey) return;
+    agregarAlCarrito(detalleProductoKey, detalleProductoCantidad);
+    cerrarDetalleProducto();
+}
+
+// Cerrar la vista rápida si se hace clic fuera de la ventana blanca
+const overlayProducto = document.getElementById('panel-producto-overlay');
+if (overlayProducto) {
+    overlayProducto.addEventListener('click', function(e) {
+        if (e.target === this) {
+            cerrarDetalleProducto();
+        }
+    });
 }
 
 // Sumar o restar una unidad de un ítem ya presente en el carrito

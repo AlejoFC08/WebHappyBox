@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     
     <!-- Vinculamos el archivo de estilos -->
-    <link rel="stylesheet" href="styles.css?v=8">
+    <link rel="stylesheet" href="styles.css?v=9">
 </head>
 <body>
 
@@ -169,6 +169,25 @@
         </div>
     </div>
 
+    <!-- VISTA RÁPIDA DE PRODUCTO (Modal) -->
+    <div id="panel-producto-overlay" class="panel-oculto">
+        <div class="panel-producto-modal">
+            <button class="btn-cerrar" onclick="cerrarDetalleProducto()" aria-label="Cerrar">✕</button>
+            <img id="detalle-producto-imagen" src="" alt="">
+            <div class="detalle-producto-info">
+                <h2 id="detalle-producto-nombre"></h2>
+                <p id="detalle-producto-descripcion"></p>
+                <div class="detalle-producto-precio">$<span id="detalle-producto-precio">0</span></div>
+                <div class="detalle-producto-cantidad">
+                    <button class="btn-cantidad" onclick="cambiarCantidadModal(-1)" aria-label="Restar uno">−</button>
+                    <span id="detalle-producto-cantidad">1</span>
+                    <button class="btn-cantidad" onclick="cambiarCantidadModal(1)" aria-label="Sumar uno">+</button>
+                </div>
+                <button class="btn-agregar-modal" onclick="confirmarAgregarDesdeModal()">Agregar al carrito</button>
+            </div>
+        </div>
+    </div>
+
     <!-- =========================================
          FOOTER (PIE DE PÁGINA)
          ========================================= -->
@@ -209,6 +228,6 @@
         </div>
     </footer>
 
-    <script src="script.js?v=8"></script>
+    <script src="script.js?v=9"></script>
 </body>
 </html>

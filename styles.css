@@ -460,6 +460,120 @@ button:hover {
 }
 
 /* =========================================
+   VISTA RÁPIDA DE PRODUCTO (MODAL)
+   ========================================= */
+#panel-producto-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(128, 3, 17, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#panel-producto-overlay.panel-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.panel-producto-modal {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 760px;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    position: relative;
+}
+
+.panel-producto-modal .btn-cerrar {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background-color: rgba(255,255,255,0.85);
+    z-index: 2;
+}
+
+#detalle-producto-imagen {
+    width: 45%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.detalle-producto-info {
+    padding: 35px 30px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+}
+
+#detalle-producto-nombre {
+    margin: 0 0 15px;
+    font-size: 1.7rem;
+}
+
+#detalle-producto-descripcion {
+    color: #666;
+    line-height: 1.6;
+    margin: 0 0 20px;
+    white-space: pre-line;
+}
+
+.detalle-producto-precio {
+    font-size: 2rem;
+    font-family: 'Playfair Display', serif;
+    color: var(--dorado);
+    margin-bottom: 25px;
+}
+
+.detalle-producto-cantidad {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 25px;
+}
+
+.detalle-producto-cantidad span {
+    font-weight: 600;
+    font-size: 1.2rem;
+    min-width: 24px;
+    text-align: center;
+}
+
+.btn-agregar-modal {
+    background-color: var(--bordo);
+    margin-top: auto;
+}
+
+.btn-agregar-modal:hover {
+    background-color: var(--dorado);
+}
+
+@media (max-width: 700px) {
+    .panel-producto-modal {
+        flex-direction: column;
+        max-height: 85vh;
+    }
+
+    #detalle-producto-imagen {
+        width: 100%;
+        height: 220px;
+    }
+}
+
+/* =========================================
    RESPONSIVE INTERMEDIO (TABLETS / LAPTOPS CHICAS)
    Achica un poco la cabecera antes de que le falte espacio
    ========================================= */
@@ -710,7 +824,7 @@ button:hover {
 }
 
 .destacado-tarjeta::after {
-    content: '+ Agregar al pedido';
+    content: 'Ver producto';
     position: absolute;
     top: 0;
     left: 0;
