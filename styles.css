@@ -1207,10 +1207,41 @@ footer {
 
 /* RESPONSIVE HERO Y FOOTER */
 @media (max-width: 768px) {
-    .hero-contenido h2 {
-        font-size: 2.2rem;
+    /* En celu el hero pasa a ser un banner chico, no ocupa media pantalla,
+       para que se llegue rápido a las categorías de más abajo */
+    .hero-carrusel {
+        height: auto;
+        min-height: 0;
     }
-    
+
+    .hero-slide {
+        position: relative;
+        padding: 50px 20px;
+    }
+
+    .hero-slide:not(.hero-slide-activo) {
+        display: none; /* Sin esto, los slides ocultos (position:relative) igual ocupan alto */
+    }
+
+    .hero-contenido h2 {
+        font-size: 1.7rem;
+        margin-bottom: 10px;
+    }
+
+    .hero-contenido p {
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+
+    .btn-hero {
+        padding: 11px 26px;
+        font-size: 0.95rem;
+    }
+
+    .hero-puntos {
+        bottom: 14px;
+    }
+
     .contenedor-nosotros h2 {
         font-size: 2rem;
     }
