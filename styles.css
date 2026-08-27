@@ -1002,7 +1002,7 @@ button:hover {
 
 .categoria-tile img {
     width: 100%;
-    height: 240px;
+    height: 360px;
     object-fit: cover;
 }
 
@@ -1107,7 +1107,9 @@ footer {
     max-width: 1200px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr 1fr;
+    /* minmax(0, ...) evita que el contenido de una columna (ej: el logo)
+       fuerce esa columna más ancha que su parte y desborde la grilla */
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
     gap: 40px;
     padding-bottom: 45px;
 }
@@ -1121,6 +1123,8 @@ footer {
 /* Le ponemos un fondito blanco al logo: es un wordmark bordo y se perdería sobre el footer bordo */
 .logo-footer {
     width: 220px;
+    max-width: 100%;
+    box-sizing: border-box;
     background-color: #ffffff;
     padding: 16px 22px;
     border-radius: 10px;
