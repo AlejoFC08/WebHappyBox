@@ -236,19 +236,21 @@ button:hover {
    VENTANA SEPARADA DEL CARRITO (MODAL)
    ========================================= */
 #panel-carrito-overlay {
-    position: fixed; 
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(128, 3, 17, 0.8); 
+    background-color: rgba(128, 3, 17, 0.8);
     display: flex;
-    justify-content: center; 
-    align-items: center; 
-    z-index: 1000; 
-    opacity: 0; 
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
     visibility: hidden;
     transition: 0.3s;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 #panel-carrito-overlay.panel-visible {
@@ -261,9 +263,10 @@ button:hover {
     padding: 30px 35px;
     border-radius: 8px;
     box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-    width: 90%;
+    width: 100%;
     max-width: 520px;
     max-height: 85vh;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -617,6 +620,31 @@ button:hover {
     .tarjeta-producto {
         width: 100%; /* Las cajas ocupan todo el ancho en celulares */
     }
+
+    /* Botones más grandes para tocar cómodo con el dedo */
+    .btn-cantidad {
+        width: 34px;
+        height: 34px;
+        font-size: 1.2rem;
+    }
+
+    .btn-quitar {
+        padding: 8px;
+        font-size: 1.1rem;
+    }
+
+    .btn-cerrar {
+        width: 38px;
+        height: 38px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .panel-carrito-modal {
+        padding: 22px 18px;
+    }
 }
 
 /* =========================================
@@ -722,24 +750,35 @@ button:hover {
 
 .hero-puntos {
     position: absolute;
-    bottom: 22px;
+    bottom: 12px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 5;
     display: flex;
-    gap: 10px;
 }
 
+/* El punto visible mide 10px, pero el botón es más grande para que sea
+   fácil tocarlo con el dedo sin que se vea como un bloque gigante */
 .hero-punto {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-punto::after {
+    content: '';
     width: 10px;
     height: 10px;
-    padding: 0;
     border-radius: 50%;
-    background-color: rgba(255,255,255,0.4);
-    border: none;
+    background-color: rgba(255,255,255,0.5);
 }
 
-.hero-punto-activo {
+.hero-punto-activo::after {
     background-color: var(--dorado);
 }
 
@@ -823,28 +862,46 @@ button:hover {
     position: relative;
 }
 
+/* En touch no existe ":hover", así que por defecto mostramos una etiqueta
+   chica y permanente para que se note que la tarjeta es tocable sin tapar
+   la foto. En dispositivos con mouse la cambiamos por el overlay grande
+   que solo aparece al pasar por encima. */
 .destacado-tarjeta::after {
     content: 'Ver producto';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 190px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(128, 3, 17, 0.55);
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(128, 3, 17, 0.88);
     color: white;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     letter-spacing: 0.3px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    padding: 5px 12px;
+    border-radius: 20px;
     pointer-events: none;
 }
 
-.destacado-tarjeta:hover::after {
-    opacity: 1;
+@media (hover: hover) {
+    .destacado-tarjeta::after {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: auto;
+        height: 190px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(128, 3, 17, 0.55);
+        font-size: 0.9rem;
+        border-radius: 0;
+        padding: 0;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .destacado-tarjeta:hover::after {
+        opacity: 1;
+    }
 }
 
 .destacado-tarjeta:hover {

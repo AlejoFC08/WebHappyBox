@@ -73,6 +73,20 @@ function cargarCarritoStorage() {
     }
 }
 
+// Si se entra a la página con un ancla (ej: productos.html#cat-ramos, como
+// hacen las tiles de categoría de la home), el navegador intenta saltar ahí
+// apenas carga el HTML, pero en ese momento los productos todavía no llegaron
+// del Google Sheet y la página es mucho más corta. Cuando el catálogo termina
+// de renderizarse (y la página ya tiene su alto final) volvemos a saltar al
+// ancla para que quede bien posicionada.
+function saltarAAnclaSiCorresponde() {
+    if (!location.hash) return;
+    const el = document.querySelector(location.hash);
+    if (el) {
+        el.scrollIntoView();
+    }
+}
+
 // Cargar productos desde Google Sheets
 async function cargarProductos() {
     try {
@@ -84,6 +98,7 @@ async function cargarProductos() {
         productosDisponibles = productos;
         mostrarCatalogoPorCategorias(productos);
         mostrarDestacados(productos);
+        saltarAAnclaSiCorresponde();
     } catch (error) {
         Object.values(CATEGORIAS).forEach(cat => {
             const contenedor = document.getElementById(cat.contenedorId);
