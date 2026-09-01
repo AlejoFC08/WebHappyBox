@@ -148,68 +148,16 @@ h1, h2, h3, .precio {
     justify-content: center; 
 }
 
+/* Misma tarjeta que "Destacados" del home: foto + cartel bordo con
+   nombre y precio (sin descripción ni botón visibles en la tarjeta;
+   el detalle se ve en la vista rápida al tocarla). */
 .tarjeta-producto {
-    background: white;
-    border-radius: 8px;
-    border: 1px solid #f0f0f0;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
-    padding: 20px;
     width: calc(33.33% - 40px); /* 3 productos por fila en PC */
     box-sizing: border-box;
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column; /* Todas las tarjetas quedan con la misma estructura y alto */
-}
-
-.tarjeta-producto button {
-    margin-top: auto; /* El botón siempre queda pegado al pie de la tarjeta */
-}
-
-.tarjeta-producto:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(128, 3, 17, 0.08);
 }
 
 .tarjeta-producto img {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-    border-radius: 4px;
-    margin-bottom: 15px;
-    flex-shrink: 0; /* La imagen nunca se achica, tenga foto propia o el ícono de respaldo */
-}
-
-.tarjeta-producto h3 {
-    margin: 10px 0;
-    font-size: 1.4rem;
-    letter-spacing: 0.5px;
-    /* Reserva siempre el espacio de 2 líneas, aunque el nombre sea corto */
-    min-height: 2.4em;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    overflow: hidden;
-}
-
-.tarjeta-producto p {
-    font-size: 0.9rem;
-    color: #666;
-    line-height: 1.5;
-    /* Recorta la descripción a 3 líneas para que no cambie el alto de la tarjeta */
-    min-height: 4.5em;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-    overflow: hidden;
-}
-
-.precio {
-    font-size: 1.8rem;
-    color: var(--dorado); 
-    margin: 15px 0;
+    height: 260px;
 }
 
 /* BOTÓN DE AGREGAR AL CARRITO (GLOBAL) */
@@ -848,11 +796,10 @@ button:hover {
     gap: 30px;
 }
 
+/* Tarjeta de producto compartida entre "Destacados" (home) y el catálogo:
+   foto + cartel bordo con nombre y precio. */
+.tarjeta-producto,
 .destacado-tarjeta {
-    width: calc(25% - 23px);
-    min-width: 220px;
-    flex: 1 1 220px;
-    max-width: 270px;
     background: white;
     border-radius: 8px;
     overflow: hidden;
@@ -860,12 +807,22 @@ button:hover {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
     position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.destacado-tarjeta {
+    width: calc(25% - 23px);
+    min-width: 220px;
+    flex: 1 1 220px;
+    max-width: 270px;
 }
 
 /* En touch no existe ":hover", así que por defecto mostramos una etiqueta
    chica y permanente para que se note que la tarjeta es tocable sin tapar
    la foto. En dispositivos con mouse la cambiamos por el overlay grande
    que solo aparece al pasar por encima. */
+.tarjeta-producto::after,
 .destacado-tarjeta::after {
     content: 'Ver producto';
     position: absolute;
@@ -882,12 +839,12 @@ button:hover {
 }
 
 @media (hover: hover) {
+    .tarjeta-producto::after,
     .destacado-tarjeta::after {
         top: 0;
         left: 0;
         right: 0;
         bottom: auto;
-        height: 190px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -899,29 +856,44 @@ button:hover {
         transition: opacity 0.3s ease;
     }
 
+    .tarjeta-producto::after {
+        height: 260px;
+    }
+
+    .destacado-tarjeta::after {
+        height: 190px;
+    }
+
+    .tarjeta-producto:hover::after,
     .destacado-tarjeta:hover::after {
         opacity: 1;
     }
 }
 
+.tarjeta-producto:hover,
 .destacado-tarjeta:hover {
     transform: translateY(-5px);
     box-shadow: 0 12px 25px rgba(128, 3, 17, 0.1);
 }
 
+.tarjeta-producto img,
 .destacado-tarjeta img {
     width: 100%;
-    height: 190px;
     object-fit: cover;
 }
 
-.destacado-banner {
+.destacado-tarjeta img {
+    height: 190px;
+}
+
+.producto-banner {
     background-color: var(--bordo);
     color: white;
     padding: 16px 14px;
+    margin-top: auto;
 }
 
-.destacado-banner h3 {
+.producto-banner h3 {
     color: white;
     font-size: 1rem;
     font-family: 'Montserrat', sans-serif;
@@ -931,7 +903,7 @@ button:hover {
     margin: 0 0 6px;
 }
 
-.destacado-precio {
+.producto-precio {
     color: var(--dorado);
     font-family: 'Playfair Display', serif;
     font-size: 1.2rem;

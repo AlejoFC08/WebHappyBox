@@ -126,17 +126,8 @@ function mostrarDestacados(productos) {
             ? String(producto.id)
             : 'idx' + indice;
 
-        const imagenSrc = producto.imagen ? producto.imagen : IMAGEN_RESPALDO;
-        const tarjeta = document.createElement('div');
-        tarjeta.className = 'destacado-tarjeta';
-        tarjeta.innerHTML = `
-            <img src="${imagenSrc}" alt="${producto.nombre}" onerror="this.onerror=null;this.src='${IMAGEN_RESPALDO}';">
-            <div class="destacado-banner">
-                <h3>${producto.nombre}</h3>
-                <span class="destacado-precio">$${producto.precio}</span>
-            </div>
-        `;
-        tarjeta.addEventListener('click', () => abrirDetalleProducto(producto._key));
+        const tarjeta = crearTarjetaProducto(producto);
+        tarjeta.classList.add('destacado-tarjeta');
         contenedor.appendChild(tarjeta);
         mostrados += 1;
     });
@@ -212,6 +203,9 @@ function mostrarCatalogoPorCategorias(productos) {
     });
 }
 
+// Arma la tarjeta de producto (foto + cartel con nombre y precio) que se usa
+// tanto en "Destacados" del home como en el catálogo. La descripción completa
+// se ve en la vista rápida al tocar la tarjeta, no en la tarjeta misma.
 function crearTarjetaProducto(producto) {
     const tarjeta = document.createElement('div');
     tarjeta.className = 'tarjeta-producto';
@@ -220,13 +214,12 @@ function crearTarjetaProducto(producto) {
 
     tarjeta.innerHTML = `
         <img src="${imagenSrc}" alt="${producto.nombre}" onerror="this.onerror=null;this.src='${IMAGEN_RESPALDO}';">
-        <h3>${producto.nombre}</h3>
-        <p>${producto.descripcion}</p>
-        <div class="precio">$${producto.precio}</div>
-        <button onclick="abrirDetalleProducto('${producto._key}')">
-            Ver producto
-        </button>
+        <div class="producto-banner">
+            <h3>${producto.nombre}</h3>
+            <span class="producto-precio">$${producto.precio}</span>
+        </div>
     `;
+    tarjeta.addEventListener('click', () => abrirDetalleProducto(producto._key));
     return tarjeta;
 }
 
@@ -408,9 +401,7 @@ function enviarPedidoWhatsApp() {
         return;
     }
 
-    // *** COLOCÁ ACÁ TU NÚMERO DE WHATSAPP ***
-    // Ejemplo: "54911XXXXXXXX" (Código de país + área + número sin el 15)
-    const numeroDestino = "5491100000000";
+    const numeroDestino = "5491125329776"; // WhatsApp de HappyBox (11 2532-9776)
 
     // Texto del mensaje (con 'HappyBox')
     let mensaje = "¡Hola HappyBox! 🎁%0AQuiero hacer este pedido:%0A%0A";
