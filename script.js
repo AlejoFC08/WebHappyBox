@@ -46,6 +46,16 @@ function normalizarUrlImagen(url) {
     return id ? `https://lh3.googleusercontent.com/d/${id}` : texto;
 }
 
+// Un producto puede tener más de una foto: en la planilla, en la columna
+// "imagen", se pueden pegar varios links separados por coma (cada uno puede
+// ser de postimg.cc, Google Drive, o lo que sea). Acá los separamos,
+// normalizamos cada uno y devolvemos la lista lista para usar.
+function obtenerImagenesProducto(producto) {
+    const crudo = (producto.imagen || '').toString();
+    const partes = crudo.split(',').map(s => s.trim()).filter(Boolean).map(normalizarUrlImagen);
+    return partes.length > 0 ? partes : [IMAGEN_RESPALDO];
+}
+
 function categoriaDeProducto(producto) {
     const texto = (producto.categoria || '').toString().trim().toLowerCase();
     if (texto.includes('ramo')) return 'ramos';
@@ -93,7 +103,7 @@ async function cargarProductos() {
         const respuesta = await fetch(API_URL);
         const productos = await respuesta.json();
         productos.forEach(producto => {
-            if (producto.imagen) producto.imagen = normalizarUrlImagen(producto.imagen);
+            producto._imagenes = obtenerImagenesProducto(producto);
         });
         productosDisponibles = productos;
         mostrarCatalogoPorCategorias(productos);
@@ -210,7 +220,7 @@ function crearTarjetaProducto(producto) {
     const tarjeta = document.createElement('div');
     tarjeta.className = 'tarjeta-producto';
 
-    const imagenSrc = producto.imagen ? producto.imagen : IMAGEN_RESPALDO;
+    const imagenSrc = producto._imagenes ? producto._imagenes[0] : IMAGEN_RESPALDO;
 
     tarjeta.innerHTML = `
         <img src="${imagenSrc}" alt="${producto.nombre}" onerror="this.onerror=null;this.src='${IMAGEN_RESPALDO}';">
@@ -237,7 +247,7 @@ function agregarAlCarrito(key, cantidad = 1) {
             id: String(key),
             nombre: producto.nombre,
             precio: producto.precio,
-            imagen: producto.imagen || IMAGEN_RESPALDO,
+            imagen: producto._imagenes ? producto._imagenes[0] : IMAGEN_RESPALDO,
             cantidad: cantidad
         });
     }
@@ -247,6 +257,8 @@ function agregarAlCarrito(key, cantidad = 1) {
 // MODAL DE DETALLE DE PRODUCTO (vista rápida antes de agregar al carrito)
 let detalleProductoKey = null;
 let detalleProductoCantidad = 1;
+let detalleProductoImagenes = [];
+let detalleProductoImagenIndice = 0;
 
 function abrirDetalleProducto(key) {
     const producto = productosDisponibles.find(p => String(p._key) === String(key));
@@ -254,12 +266,10 @@ function abrirDetalleProducto(key) {
 
     detalleProductoKey = key;
     detalleProductoCantidad = 1;
+    detalleProductoImagenes = producto._imagenes && producto._imagenes.length > 0 ? producto._imagenes : [IMAGEN_RESPALDO];
+    detalleProductoImagenIndice = 0;
 
-    const imagenSrc = producto.imagen ? producto.imagen : IMAGEN_RESPALDO;
-    const imagen = document.getElementById('detalle-producto-imagen');
-    imagen.src = imagenSrc;
-    imagen.alt = producto.nombre;
-    imagen.onerror = () => { imagen.onerror = null; imagen.src = IMAGEN_RESPALDO; };
+    mostrarImagenModal();
 
     document.getElementById('detalle-producto-nombre').innerText = producto.nombre;
     document.getElementById('detalle-producto-descripcion').innerText = producto.descripcion || '';
@@ -267,6 +277,40 @@ function abrirDetalleProducto(key) {
     document.getElementById('detalle-producto-cantidad').innerText = detalleProductoCantidad;
 
     document.getElementById('panel-producto-overlay').classList.add('panel-visible');
+}
+
+// Pinta la foto actual de la galería del modal, junto con las flechas y los
+// puntos (que solo se muestran si el producto tiene más de una foto)
+function mostrarImagenModal() {
+    const nombre = document.getElementById('detalle-producto-nombre').innerText;
+    const imagen = document.getElementById('detalle-producto-imagen');
+    imagen.src = detalleProductoImagenes[detalleProductoImagenIndice];
+    imagen.alt = nombre;
+    imagen.onerror = () => { imagen.onerror = null; imagen.src = IMAGEN_RESPALDO; };
+
+    const hayVarias = detalleProductoImagenes.length > 1;
+    const controles = document.querySelectorAll('.detalle-imagen-flecha');
+    controles.forEach(c => c.style.display = hayVarias ? 'flex' : 'none');
+
+    const puntosContenedor = document.getElementById('detalle-imagen-puntos');
+    if (!hayVarias) {
+        puntosContenedor.innerHTML = '';
+        return;
+    }
+    puntosContenedor.innerHTML = detalleProductoImagenes
+        .map((_, i) => `<button class="detalle-imagen-punto${i === detalleProductoImagenIndice ? ' detalle-imagen-punto-activo' : ''}" onclick="irAImagenModal(${i})" aria-label="Ver foto ${i + 1}"></button>`)
+        .join('');
+}
+
+function cambiarImagenModal(delta) {
+    const total = detalleProductoImagenes.length;
+    detalleProductoImagenIndice = (detalleProductoImagenIndice + delta + total) % total;
+    mostrarImagenModal();
+}
+
+function irAImagenModal(indice) {
+    detalleProductoImagenIndice = indice;
+    mostrarImagenModal();
 }
 
 function cerrarDetalleProducto() {
