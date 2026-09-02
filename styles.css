@@ -132,6 +132,42 @@ h1, h2, h3, .precio {
     display: none;
 }
 
+/* Agrupa carrito + botón hamburguesa a la derecha de la cabecera */
+.acciones-cabecera {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+/* BOTÓN DE MENÚ HAMBURGUESA (solo aparece en mobile, ver media query) */
+.boton-menu {
+    display: none;
+    position: relative;
+    background-color: transparent;
+    color: var(--bordo);
+    border: 1px solid #eaeaea;
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.boton-menu:hover {
+    background-color: var(--fondo-claro);
+    border-color: var(--dorado);
+}
+
+.icono-menu {
+    width: 20px;
+    height: 20px;
+}
+
 /* =========================================
    CATÁLOGO DE PRODUCTOS
    ========================================= */
@@ -607,24 +643,55 @@ button:hover {
    ========================================= */
 @media (max-width: 768px) {
     .cabecera-principal {
-        flex-direction: column; /* Apila los elementos hacia abajo */
-        gap: 15px;
-        padding: 20px;
-        /* En celu el header apilado queda muy alto: si sigue "sticky" puede tapar
-           el pie de página al llegar al final del scroll sin dejar forma de destaparlo */
-        position: static;
-    }
-    
-    .logo-cabecera {
-        width: 190px; /* Logo un poquito más grande en celu */
+        /* Fila única y compacta (logo + acciones) para que la cabecera fija
+           no ocupe media pantalla; el menú de links se abre como panel aparte. */
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 12px 20px;
+        position: sticky;
+        top: 0;
     }
 
-    .navegacion {
-        flex-wrap: wrap; /* Si no entran los botones, los pasa a la línea de abajo */
-        justify-content: center;
-        gap: 15px; 
+    .logo-cabecera {
+        width: 130px; /* Más chico que en desktop para que entre todo en una fila */
     }
-    
+
+    .boton-menu {
+        display: flex; /* Solo se ve en mobile */
+    }
+
+    /* En mobile, el <nav> deja de estar en la fila y pasa a ser un panel
+       desplegable debajo de la cabecera (fija gracias a la posición del header). */
+    .navegacion {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        gap: 0;
+        background-color: #ffffff;
+        border-top: 1px solid #eaeaea;
+        box-shadow: 0 12px 20px rgba(0,0,0,0.08);
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        visibility: hidden;
+        transition: max-height 0.3s ease, opacity 0.2s ease;
+    }
+
+    .navegacion.navegacion-abierta {
+        max-height: 300px;
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .navegacion a {
+        padding: 16px 20px;
+        border-bottom: 1px solid #f5f5f5;
+    }
+
     .tarjeta-producto {
         width: 100%; /* Las cajas ocupan todo el ancho en celulares */
     }

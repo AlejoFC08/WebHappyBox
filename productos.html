@@ -26,7 +26,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
     <!-- Vinculamos el archivo de estilos -->
-    <link rel="stylesheet" href="styles.css?v=26">
+    <link rel="stylesheet" href="styles.css?v=27">
 </head>
 <body>
 
@@ -36,22 +36,32 @@
             <img src="logo.png?v=2" alt="Happy Box" class="logo-cabecera">
         </div>
 
-        <!-- Centro: Botones de navegación -->
-        <nav class="navegacion">
+        <!-- Centro: Botones de navegación (en celu, panel desplegable) -->
+        <nav class="navegacion" id="navegacion-principal">
             <a href="index.html">Inicio</a>
             <a href="productos.html">Productos</a>
             <a href="index.html#nosotros">Nosotros</a>
             <a href="#pie-contacto">Contacto</a>
         </nav>
 
-        <!-- Derecha: Carrito -->
-        <button id="icono-carrito" onclick="abrirCarrito()" aria-label="Ver mi pedido">
-            <svg class="icono-bolsa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M6 8h12l-1 12a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1L6 8Z"/>
-                <path d="M9 8V6.5a3 3 0 0 1 6 0V8"/>
-            </svg>
-            <span id="contador-carrito" class="badge-carrito">0</span>
-        </button>
+        <!-- Derecha: Carrito (siempre visible) + menú hamburguesa (solo celu) -->
+        <div class="acciones-cabecera">
+            <button id="icono-carrito" onclick="abrirCarrito()" aria-label="Ver mi pedido">
+                <svg class="icono-bolsa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M6 8h12l-1 12a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1L6 8Z"/>
+                    <path d="M9 8V6.5a3 3 0 0 1 6 0V8"/>
+                </svg>
+                <span id="contador-carrito" class="badge-carrito">0</span>
+            </button>
+
+            <button id="boton-menu" class="boton-menu" onclick="alternarMenuMobile()" aria-label="Abrir menú" aria-expanded="false" aria-controls="navegacion-principal">
+                <svg class="icono-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                    <line x1="4" y1="7" x2="20" y2="7"/>
+                    <line x1="4" y1="12" x2="20" y2="12"/>
+                    <line x1="4" y1="17" x2="20" y2="17"/>
+                </svg>
+            </button>
+        </div>
     </header>
 
     <!-- =========================================
@@ -192,6 +202,6 @@
         </svg>
     </a>
 
-    <script src="script.js?v=16"></script>
+    <script src="script.js?v=17"></script>
 </body>
 </html>

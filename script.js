@@ -525,6 +525,24 @@ document.getElementById('panel-carrito-overlay').addEventListener('click', funct
     }
 });
 
+// Menú hamburguesa (solo visible en mobile): despliega/oculta los links de
+// navegación, que en celu aparecen como un panel debajo de la cabecera fija.
+function alternarMenuMobile() {
+    const nav = document.getElementById('navegacion-principal');
+    const boton = document.getElementById('boton-menu');
+    const abierto = nav.classList.toggle('navegacion-abierta');
+    boton.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+}
+
+// Al tocar un link del menú (aunque sea un ancla a la misma página), se cierra
+// el panel para no dejarlo tapando el contenido.
+document.querySelectorAll('#navegacion-principal a').forEach(function(link) {
+    link.addEventListener('click', function() {
+        document.getElementById('navegacion-principal').classList.remove('navegacion-abierta');
+        document.getElementById('boton-menu').setAttribute('aria-expanded', 'false');
+    });
+});
+
 // Enviar el pedido formateado a WhatsApp
 function enviarPedidoWhatsApp() {
     if (carrito.length === 0) {
