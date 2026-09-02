@@ -58,6 +58,90 @@ function obtenerImagenesProducto(producto) {
     return partes.length > 0 ? partes : [IMAGEN_RESPALDO];
 }
 
+// Nombres de productos/golosinas que la planilla suele escribir de forma
+// inconsistente (todo minúscula, sin tildes, etc.). Acá se corrigen a su
+// forma "prolija" antes de mostrarlos. Si un ítem no está en esta lista,
+// se le aplica una capitalización genérica (ver capitalizarPalabra).
+const NOMBRES_CONOCIDOS = {
+    'kit kat': 'KitKat',
+    'bon o bon': 'Bon o Bon',
+    'oblea bon o bon': 'Oblea Bon o Bon',
+    'nugaton': 'Nugatón',
+    'mani': 'Maní',
+    'nuetella': 'Nutella',
+    'chocolate cofler': 'Chocolate Cofler',
+    'ferrero triple': 'Ferrero Triple',
+    'kinder max': 'Kinder Max',
+    'kinder barraita': 'Kinder Barrita',
+    'mini rocklets': 'Mini Rocklets',
+    'rocklets': 'Rocklets',
+    'dos corazones': 'Dos Corazones',
+    'mogul moritas': 'Mogul Moritas',
+    'bolsa premiun': 'Bolsa Premium',
+    'queso tybo': 'Queso Tybo',
+    'gomitas': 'Gomitas'
+};
+
+// Palabras chicas que quedan en minúscula salvo que sean la primera del ítem
+const CONECTORES = ['o', 'y', 'de', 'del', 'la', 'el'];
+
+function capitalizarPalabra(palabra, esPrimera) {
+    if (!esPrimera && CONECTORES.includes(palabra.toLowerCase())) return palabra.toLowerCase();
+    return palabra.charAt(0).toUpperCase() + palabra.slice(1).toLowerCase();
+}
+
+function formatearNombreItem(nombre) {
+    const clave = nombre.trim().toLowerCase();
+    if (NOMBRES_CONOCIDOS[clave]) return NOMBRES_CONOCIDOS[clave];
+    return nombre
+        .trim()
+        .split(/\s+/)
+        .map((palabra, i) => {
+            const claveLimpia = palabra.replace(/[.,]+$/, '').toLowerCase();
+            if (NOMBRES_CONOCIDOS[claveLimpia]) {
+                return NOMBRES_CONOCIDOS[claveLimpia] + palabra.slice(claveLimpia.length);
+            }
+            return capitalizarPalabra(palabra, i === 0);
+        })
+        .join(' ');
+}
+
+// Las descripciones en la planilla vienen con formatos muy distintos: a veces
+// separadas por coma, a veces cada ítem en su propia línea (con \n, \r\n o
+// mezclando ambos), a veces con tabs entre la cantidad y el nombre, a veces
+// todo en mayúsculas. Esta función limpia todo eso y devuelve una lista
+// prolija separada por comas. Si el texto es una frase libre (sin comas ni
+// saltos de línea, como una descripción tipo "diseño personalizado"), no la
+// trata como lista: solo prolija los espacios y la primera letra.
+function formatearDescripcion(texto) {
+    if (!texto) return '';
+
+    const normalizado = texto.toString().replace(/\r\n/g, '\n').replace(/\n/g, ',');
+    const items = normalizado
+        .split(',')
+        .map(item => item
+            .replace(/\t+/g, ' ')
+            .replace(/(\d)([A-Za-zÁÉÍÓÚÑáéíóúñ])/g, '$1 $2')
+            .replace(/\s+/g, ' ')
+            .trim())
+        .filter(Boolean);
+
+    if (items.length <= 1) {
+        const frase = items[0] || '';
+        return frase.charAt(0).toUpperCase() + frase.slice(1);
+    }
+
+    return items
+        .map(item => {
+            const match = item.match(/^(\d+)\s*(.*)$/);
+            if (match && match[2]) {
+                return `${match[1]} ${formatearNombreItem(match[2])}`;
+            }
+            return formatearNombreItem(item);
+        })
+        .join(', ');
+}
+
 function categoriaDeProducto(producto) {
     const texto = (producto.categoria || '').toString().trim().toLowerCase();
     if (texto.includes('ramo')) return 'ramos';
@@ -275,7 +359,7 @@ function abrirDetalleProducto(key) {
     mostrarImagenModal();
 
     document.getElementById('detalle-producto-nombre').innerText = producto.nombre;
-    document.getElementById('detalle-producto-descripcion').innerText = producto.descripcion || '';
+    document.getElementById('detalle-producto-descripcion').innerText = formatearDescripcion(producto.descripcion);
     document.getElementById('detalle-producto-precio').innerText = producto.precio;
     document.getElementById('detalle-producto-cantidad').innerText = detalleProductoCantidad;
 
