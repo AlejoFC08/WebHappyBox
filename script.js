@@ -15,13 +15,15 @@ const IMAGEN_RESPALDO = "data:image/svg+xml;utf8," + encodeURIComponent(`
 
 // Categorías del catálogo. Para asignar un producto a una categoría
 // agregá una columna "categoria" en el Google Sheet con el texto correspondiente
-// ("ramo", "taza", "dulce" o "salada"/"salado"). Si la columna no existe o no
-// coincide con ninguna, el producto se muestra en "Box Dulces" por defecto.
+// ("ramo", "taza", "dulce", "salada"/"salado" o "cumple"). Si la columna no
+// existe o no coincide con ninguna, el producto se muestra en "Box Dulces"
+// por defecto.
 const CATEGORIAS = {
     ramos: { titulo: 'Ramos de Golosinas', contenedorId: 'contenedor-ramos' },
     tazas: { titulo: 'Arreglos de Tazas', contenedorId: 'contenedor-tazas' },
     dulces: { titulo: 'Box Dulces', contenedorId: 'contenedor-dulces' },
-    saladas: { titulo: 'Box Saladas', contenedorId: 'contenedor-saladas' }
+    saladas: { titulo: 'Box Saladas', contenedorId: 'contenedor-saladas' },
+    cumpleanos: { titulo: 'Cajitas de Cumpleaños', contenedorId: 'contenedor-cumpleanos' }
 };
 
 const CARRITO_STORAGE_KEY = 'happybox-carrito';
@@ -61,6 +63,7 @@ function categoriaDeProducto(producto) {
     if (texto.includes('ramo')) return 'ramos';
     if (texto.includes('taza')) return 'tazas';
     if (texto.includes('salada') || texto.includes('salado')) return 'saladas';
+    if (texto.includes('cumple')) return 'cumpleanos';
     if (texto.includes('dulce')) return 'dulces';
     return 'dulces';
 }
@@ -185,7 +188,7 @@ function mostrarCatalogoPorCategorias(productos) {
 
     if (!hayContenedores) return; // Esta página no tiene catálogo (ej: la home)
 
-    const conteo = { ramos: 0, tazas: 0, dulces: 0, saladas: 0 };
+    const conteo = { ramos: 0, tazas: 0, dulces: 0, saladas: 0, cumpleanos: 0 };
 
     productos.forEach((producto, indice) => {
         if (!producto.nombre) return;

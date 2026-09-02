@@ -1052,6 +1052,12 @@ button:hover {
     object-fit: cover;
 }
 
+/* La foto de la torta/cajitas de cumpleaños es vertical: sin esto se ve
+   solo el cartel de arriba y no las cajitas */
+.categoria-tile-img-cumpleanos {
+    object-position: center 75%;
+}
+
 .categoria-tile-banner {
     background-color: var(--bordo);
     padding: 20px 16px;
@@ -1155,7 +1161,7 @@ footer {
     display: grid;
     /* minmax(0, ...) evita que el contenido de una columna (ej: el logo)
        fuerce esa columna más ancha que su parte y desborde la grilla */
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
     gap: 40px;
     padding-bottom: 45px;
 }
@@ -1212,10 +1218,6 @@ footer {
 
 .footer-lista-links a:hover {
     color: var(--dorado);
-}
-
-.footer-icono {
-    flex-shrink: 0;
 }
 
 .redes-links {
