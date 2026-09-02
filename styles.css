@@ -666,8 +666,6 @@ button:hover {
 }
 
 .hero-slide {
-    /* Fondo con gradiente en bordo para que el texto blanco sea legible, sumado a una imagen de regalos */
-    background-image: linear-gradient(rgba(128, 3, 17, 0.75), rgba(128, 3, 17, 0.75)), url('https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=2040&auto=format&fit=crop');
     background-size: cover;
     background-position: center;
     position: absolute;
@@ -681,6 +679,22 @@ button:hover {
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.6s ease;
+}
+
+/* Cada slide con su propia foto, siempre con un velo en bordo encima para
+   que el texto blanco se lea bien */
+.hero-slide-cumple {
+    background-image: linear-gradient(rgba(128, 3, 17, 0.5), rgba(128, 3, 17, 0.5)), url('cajitas-cumpleanos.jpg');
+    background-position: center 75%;
+}
+
+.hero-slide-ramo {
+    background-image: linear-gradient(rgba(128, 3, 17, 0.45), rgba(128, 3, 17, 0.45)), url('ramos-de-golosinas.jpg');
+    background-position: center 30%;
+}
+
+.hero-slide-dulces {
+    background-image: linear-gradient(rgba(128, 3, 17, 0.5), rgba(128, 3, 17, 0.5)), url('box-dulces.jpg');
 }
 
 .hero-slide-activo {
