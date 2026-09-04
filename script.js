@@ -23,7 +23,8 @@ const CATEGORIAS = {
     tazas: { titulo: 'Arreglos de Tazas', contenedorId: 'contenedor-tazas' },
     dulces: { titulo: 'Box Dulces', contenedorId: 'contenedor-dulces' },
     saladas: { titulo: 'Box Saladas', contenedorId: 'contenedor-saladas' },
-    cumpleanos: { titulo: 'Cajitas de Cumpleaños', contenedorId: 'contenedor-cumpleanos' }
+    cumpleanos: { titulo: 'Cajitas de Cumpleaños', contenedorId: 'contenedor-cumpleanos' },
+    especiales: { titulo: 'Regalos Especiales', contenedorId: 'contenedor-especiales' }
 };
 
 const CARRITO_STORAGE_KEY = 'happybox-carrito';
@@ -148,6 +149,7 @@ function categoriaDeProducto(producto) {
     if (texto.includes('taza')) return 'tazas';
     if (texto.includes('salada') || texto.includes('salado')) return 'saladas';
     if (texto.includes('cumple')) return 'cumpleanos';
+    if (texto.includes('especial') || texto.includes('maestro')) return 'especiales';
     if (texto.includes('dulce')) return 'dulces';
     return 'dulces';
 }
@@ -272,7 +274,7 @@ function mostrarCatalogoPorCategorias(productos) {
 
     if (!hayContenedores) return; // Esta página no tiene catálogo (ej: la home)
 
-    const conteo = { ramos: 0, tazas: 0, dulces: 0, saladas: 0, cumpleanos: 0 };
+    const conteo = { ramos: 0, tazas: 0, dulces: 0, saladas: 0, cumpleanos: 0, especiales: 0 };
 
     productos.forEach((producto, indice) => {
         if (!producto.nombre) return;
