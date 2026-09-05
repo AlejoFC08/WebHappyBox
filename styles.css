@@ -764,6 +764,10 @@ button:hover {
     background-image: linear-gradient(rgba(128, 3, 17, 0.5), rgba(128, 3, 17, 0.5)), url('box-dulces.jpg');
 }
 
+.hero-slide-maestro {
+    background-image: linear-gradient(rgba(128, 3, 17, 0.5), rgba(128, 3, 17, 0.5)), url('dia-del-maestro.jpg');
+}
+
 .hero-slide-activo {
     opacity: 1;
     visibility: visible;
