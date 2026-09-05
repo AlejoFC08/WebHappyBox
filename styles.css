@@ -768,6 +768,24 @@ button:hover {
     background-image: linear-gradient(rgba(128, 3, 17, 0.5), rgba(128, 3, 17, 0.5)), url('dia-del-maestro.jpg');
 }
 
+/* Banner promocional estático (sin rotación) para el catálogo: misma foto y
+   texto que el slide de Día del Maestro del home, pero fijo, sin flechas ni
+   puntos. Reusa .hero-contenido y .btn-hero para el texto y el botón. */
+.banner-promo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    padding: 70px 20px;
+    background-size: cover;
+    background-position: center;
+}
+
+.banner-promo-maestro {
+    background-image: linear-gradient(rgba(128, 3, 17, 0.5), rgba(128, 3, 17, 0.5)), url('dia-del-maestro.jpg');
+}
+
 .hero-slide-activo {
     opacity: 1;
     visibility: visible;
@@ -1360,6 +1378,10 @@ footer {
     .hero-slide {
         position: relative;
         padding: 50px 20px;
+    }
+
+    .banner-promo {
+        padding: 45px 20px;
     }
 
     .hero-slide:not(.hero-slide-activo) {
