@@ -26,7 +26,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
     <!-- Vinculamos el archivo de estilos -->
-    <link rel="stylesheet" href="styles.css?v=29">
+    <link rel="stylesheet" href="styles.css?v=30">
 </head>
 <body>
 
@@ -233,6 +233,16 @@
                     <span id="detalle-producto-cantidad">1</span>
                     <button class="btn-cantidad" onclick="cambiarCantidadModal(1)" aria-label="Sumar uno">+</button>
                 </div>
+
+                <label class="detalle-producto-extra" id="detalle-producto-extra-rosa">
+                    <input type="checkbox" id="check-agregar-rosa">
+                    <img id="extra-rosa-imagen" src="" alt="">
+                    <span class="detalle-producto-extra-texto">
+                        Sumar <strong id="extra-rosa-nombre"></strong>
+                        <span class="detalle-producto-extra-precio">+$<span id="extra-rosa-precio">0</span></span>
+                    </span>
+                </label>
+
                 <button class="btn-agregar-modal" onclick="confirmarAgregarDesdeModal()">Agregar al carrito</button>
             </div>
         </div>
@@ -287,6 +297,6 @@
         </svg>
     </a>
 
-    <script src="script.js?v=18"></script>
+    <script src="script.js?v=19"></script>
 </body>
 </html>

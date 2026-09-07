@@ -31,6 +31,10 @@ const CARRITO_STORAGE_KEY = 'happybox-carrito';
 
 let carrito = [];
 let productosDisponibles = [];
+// Producto "extra" (ver categoriaDeProducto) que se ofrece como complemento
+// dentro del modal de vista rápida de cualquier otro producto, ej: una rosa
+// de plástico para sumar a una box. null si la planilla no tiene ninguno.
+let productoExtraRosa = null;
 
 // Convierte un link de Google Drive (el que te da el botón "Compartir") en una
 // URL que se puede usar directo en un <img>. Así, en la planilla, en la columna
@@ -150,6 +154,10 @@ function categoriaDeProducto(producto) {
     if (texto.includes('salada') || texto.includes('salado')) return 'saladas';
     if (texto.includes('cumple')) return 'cumpleanos';
     if (texto.includes('especial') || texto.includes('maestro')) return 'especiales';
+    // "extra": productos que no se muestran como tarjeta en ningún lado (ni
+    // catálogo ni destacados), pero sí se pueden ofrecer como complemento
+    // dentro del modal de otro producto (ver productoExtraRosa).
+    if (texto.includes('extra') || texto.includes('complemento')) return 'extra';
     if (texto.includes('dulce')) return 'dulces';
     return 'dulces';
 }
@@ -191,10 +199,18 @@ async function cargarProductos() {
     try {
         const respuesta = await fetch(API_URL);
         const productos = await respuesta.json();
-        productos.forEach(producto => {
+        productos.forEach((producto, indice) => {
             producto._imagenes = obtenerImagenesProducto(producto);
+            // Clave única y estable, asignada acá para TODOS los productos
+            // (incluidos los "extra" que no se listan en ningún catálogo),
+            // así después se pueden agregar al carrito por su key aunque
+            // nunca hayan pasado por mostrarCatalogoPorCategorias/Destacados.
+            producto._key = (producto.id !== undefined && producto.id !== null && producto.id !== '')
+                ? String(producto.id)
+                : 'idx' + indice;
         });
         productosDisponibles = productos;
+        productoExtraRosa = productos.find(p => categoriaDeProducto(p) === 'extra') || null;
         mostrarCatalogoPorCategorias(productos);
         mostrarDestacados(productos);
         saltarAAnclaSiCorresponde();
@@ -218,12 +234,9 @@ function mostrarDestacados(productos) {
     contenedor.innerHTML = '';
     let mostrados = 0;
 
-    productos.forEach((producto, indice) => {
+    productos.forEach(producto => {
         if (mostrados >= CANTIDAD_DESTACADOS || !producto.nombre) return;
-
-        producto._key = (producto.id !== undefined && producto.id !== null && producto.id !== '')
-            ? String(producto.id)
-            : 'idx' + indice;
+        if (categoriaDeProducto(producto) === 'extra') return; // no es un producto destacable
 
         const tarjeta = crearTarjetaProducto(producto);
         tarjeta.classList.add('destacado-tarjeta');
@@ -276,15 +289,8 @@ function mostrarCatalogoPorCategorias(productos) {
 
     const conteo = { ramos: 0, tazas: 0, dulces: 0, saladas: 0, cumpleanos: 0, especiales: 0 };
 
-    productos.forEach((producto, indice) => {
+    productos.forEach(producto => {
         if (!producto.nombre) return;
-
-        // La planilla suele traer id vacío en varias filas: generamos una clave
-        // única y estable por producto para que "Agregar al carrito" nunca
-        // confunda un producto con otro.
-        producto._key = (producto.id !== undefined && producto.id !== null && producto.id !== '')
-            ? String(producto.id)
-            : 'idx' + indice;
 
         const clave = categoriaDeProducto(producto);
         const contenedor = contenedores[clave];
@@ -365,7 +371,31 @@ function abrirDetalleProducto(key) {
     document.getElementById('detalle-producto-precio').innerText = producto.precio;
     document.getElementById('detalle-producto-cantidad').innerText = detalleProductoCantidad;
 
+    mostrarExtraRosaSiCorresponde(producto);
+
     document.getElementById('panel-producto-overlay').classList.add('panel-visible');
+}
+
+// Muestra el check "Sumar una rosa de plástico" en el modal de cualquier
+// producto que NO sea la rosa misma (evita ofrecerle la rosa a la propia
+// rosa). Si la planilla no tiene ningún producto "extra" cargado, la fila
+// queda oculta y no rompe nada.
+function mostrarExtraRosaSiCorresponde(producto) {
+    const fila = document.getElementById('detalle-producto-extra-rosa');
+    if (!fila) return;
+
+    const checkRosa = document.getElementById('check-agregar-rosa');
+    checkRosa.checked = false;
+
+    const corresponde = productoExtraRosa && String(producto._key) !== String(productoExtraRosa._key);
+    fila.style.display = corresponde ? 'flex' : 'none';
+    if (!corresponde) return;
+
+    document.getElementById('extra-rosa-nombre').innerText = productoExtraRosa.nombre;
+    document.getElementById('extra-rosa-precio').innerText = productoExtraRosa.precio;
+    const imgRosa = document.getElementById('extra-rosa-imagen');
+    imgRosa.src = productoExtraRosa._imagenes ? productoExtraRosa._imagenes[0] : IMAGEN_RESPALDO;
+    imgRosa.alt = productoExtraRosa.nombre;
 }
 
 // Pinta la foto actual de la galería del modal, junto con las flechas y los
@@ -414,6 +444,12 @@ function cambiarCantidadModal(delta) {
 function confirmarAgregarDesdeModal() {
     if (!detalleProductoKey) return;
     agregarAlCarrito(detalleProductoKey, detalleProductoCantidad);
+
+    const checkRosa = document.getElementById('check-agregar-rosa');
+    if (checkRosa && checkRosa.checked && productoExtraRosa) {
+        agregarAlCarrito(productoExtraRosa._key, 1);
+    }
+
     cerrarDetalleProducto();
 }
 

@@ -599,6 +599,52 @@ button:hover {
     text-align: center;
 }
 
+/* Check "Sumar rosa de plástico" (u otro complemento) dentro del modal de
+   cualquier producto. Oculto por default: JS lo muestra en "flex" solo si
+   hay un producto "extra" cargado en la planilla. */
+.detalle-producto-extra {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+    padding: 10px 12px;
+    border: 1px solid #eaeaea;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.detalle-producto-extra:has(input:checked) {
+    border-color: var(--dorado);
+    background-color: var(--fondo-claro);
+}
+
+.detalle-producto-extra input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    accent-color: var(--bordo);
+}
+
+.detalle-producto-extra img {
+    width: 42px;
+    height: 42px;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
+    background-color: var(--fondo-claro);
+}
+
+.detalle-producto-extra-texto {
+    font-size: 0.95rem;
+    color: #444;
+}
+
+.detalle-producto-extra-precio {
+    color: var(--dorado);
+    font-weight: 600;
+}
+
 .btn-agregar-modal {
     background-color: var(--bordo);
     margin-top: auto;
