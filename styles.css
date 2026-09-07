@@ -627,17 +627,44 @@ button:hover {
 }
 
 .detalle-producto-extra img {
-    width: 42px;
-    height: 42px;
+    width: 56px;
+    height: 56px;
     object-fit: cover;
     border-radius: 4px;
     flex-shrink: 0;
     background-color: var(--fondo-claro);
+    cursor: zoom-in;
 }
 
 .detalle-producto-extra-texto {
     font-size: 0.95rem;
     color: #444;
+}
+
+/* Lightbox simple para ver más grande la foto de un complemento (ej: la
+   miniatura de la rosa dentro del check de arriba) */
+.lightbox-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    box-sizing: border-box;
+    cursor: zoom-out;
+}
+
+.lightbox-overlay.lightbox-visible {
+    display: flex;
+}
+
+.lightbox-overlay img {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
 }
 
 .detalle-producto-extra-precio {

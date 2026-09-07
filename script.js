@@ -398,6 +398,26 @@ function mostrarExtraRosaSiCorresponde(producto) {
     imgRosa.alt = productoExtraRosa.nombre;
 }
 
+// La miniatura del complemento es chica a propósito (no es el producto
+// principal del modal), así que se puede tocar para verla más grande en un
+// lightbox simple. preventDefault/stopPropagation evitan que el toque
+// también tilde el checkbox (la miniatura está dentro del <label>).
+function abrirLightboxExtra(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!productoExtraRosa) return;
+
+    document.getElementById('lightbox-extra-imagen').src = productoExtraRosa._imagenes
+        ? productoExtraRosa._imagenes[0]
+        : IMAGEN_RESPALDO;
+    document.getElementById('lightbox-extra-imagen').alt = productoExtraRosa.nombre;
+    document.getElementById('lightbox-extra').classList.add('lightbox-visible');
+}
+
+function cerrarLightboxExtra() {
+    document.getElementById('lightbox-extra').classList.remove('lightbox-visible');
+}
+
 // Pinta la foto actual de la galería del modal, junto con las flechas y los
 // puntos (que solo se muestran si el producto tiene más de una foto)
 function mostrarImagenModal() {
