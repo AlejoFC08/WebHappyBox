@@ -26,15 +26,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
     <!-- Vinculamos el archivo de estilos -->
-    <link rel="stylesheet" href="styles.css?v=33">
+    <link rel="stylesheet" href="styles.css?v=34">
 </head>
 <body>
 
 <header class="cabecera-principal">
         <!-- Izquierda: Logo -->
-        <div class="logo-contenedor">
+        <a class="logo-contenedor" href="index.html" aria-label="HappyBox — Inicio">
             <img src="logo.png?v=2" alt="Happy Box" class="logo-cabecera">
-        </div>
+        </a>
 
         <!-- Centro: Botones de navegación (en celu, panel desplegable) -->
         <nav class="navegacion" id="navegacion-principal">
@@ -64,39 +64,18 @@
         </div>
     </header>
 
-<!-- =========================================
-         HERO CARRUSEL (BANNER PRINCIPAL)
-         ========================================= -->
-    <section class="hero-carrusel" id="hero-carrusel">
-        <div class="hero-slide hero-slide-cumple hero-slide-activo">
-            <div class="hero-contenido">
-                <h2>Cajitas de cumpleaños personalizadas</h2>
-                <p>Elegí el tema que más le guste y armamos cajitas únicas para repartir en la fiesta.</p>
-                <a href="productos.html#cat-cumpleanos" class="btn-hero">Ver Cajitas de Cumpleaños</a>
-            </div>
+<main>
+    <section class="portada" aria-labelledby="titulo-portada">
+        <div class="portada-texto">
+            <p class="sobre-titulo">Hecho a mano, pensado para vos</p>
+            <h1 id="titulo-portada">Regalos que<br>alegran el día.</h1>
+            <p class="portada-descripcion">Un cumpleaños, un gracias o un porque sí. Elegí una HappyBox y convertí un pequeño detalle en un lindo momento.</p>
+            <a href="productos.html" class="btn-portada">Elegí tu regalo <span aria-hidden="true">↗</span></a>
+            <p class="portada-nota">Ramos, cajas y detalles preparados con cariño.</p>
         </div>
-        <div class="hero-slide hero-slide-ramo">
-            <div class="hero-contenido">
-                <h2>El ramo que se puede comer</h2>
-                <p>Cambiá las flores por golosinas: armamos tu ramo a mano, para cualquier ocasión.</p>
-                <a href="productos.html#cat-ramos" class="btn-hero">Ver Ramos de Golosinas</a>
-            </div>
-        </div>
-        <div class="hero-slide hero-slide-dulces">
-            <div class="hero-contenido">
-                <h2>Cajas dulces para regalar</h2>
-                <p>Una selección de golosinas armada a mano, lista para regalar en cualquier ocasión.</p>
-                <a href="productos.html#cat-dulces" class="btn-hero">Ver Box Dulces</a>
-            </div>
-        </div>
-
-        <button class="hero-flecha hero-flecha-izq" onclick="cambiarSlideHero(-1)" aria-label="Slide anterior">‹</button>
-        <button class="hero-flecha hero-flecha-der" onclick="cambiarSlideHero(1)" aria-label="Slide siguiente">›</button>
-
-        <div class="hero-puntos">
-            <button class="hero-punto hero-punto-activo" onclick="irASlideHero(0)" aria-label="Ir al slide 1"></button>
-            <button class="hero-punto" onclick="irASlideHero(1)" aria-label="Ir al slide 2"></button>
-            <button class="hero-punto" onclick="irASlideHero(2)" aria-label="Ir al slide 3"></button>
+        <div class="portada-foto">
+            <img src="box-dulces.jpg" alt="Caja de regalo HappyBox con un lazo dorado" fetchpriority="high" width="1200" height="1200">
+            <span class="portada-foto-nota">Un detalle. Una sonrisa.</span>
         </div>
     </section>
 
@@ -134,31 +113,31 @@
         <h2 class="categorias-titulo">Elegí tu HappyBox ideal</h2>
         <div class="categorias-grid">
             <a href="productos.html#cat-ramos" class="categoria-tile">
-                <img src="ramos-de-golosinas.jpg" alt="Ramos de Golosinas">
+                <img src="ramos-de-golosinas.jpg" alt="Ramos de Golosinas" loading="lazy">
                 <div class="categoria-tile-banner">
                     <h3>Ramos de Golosinas</h3>
                 </div>
             </a>
             <a href="productos.html#cat-tazas" class="categoria-tile">
-                <img src="arreglos-de-tazas.jpg" alt="Arreglos de Tazas">
+                <img src="arreglos-de-tazas.jpg" alt="Arreglos de Tazas" loading="lazy">
                 <div class="categoria-tile-banner">
                     <h3>Arreglos de Tazas</h3>
                 </div>
             </a>
             <a href="productos.html#cat-dulces" class="categoria-tile">
-                <img src="box-dulces.jpg" alt="Box Dulces">
+                <img src="box-dulces.jpg" alt="Box Dulces" loading="lazy">
                 <div class="categoria-tile-banner">
                     <h3>Box Dulces</h3>
                 </div>
             </a>
             <a href="productos.html#cat-saladas" class="categoria-tile">
-                <img src="box-saladas.jpg" alt="Box Saladas">
+                <img src="box-saladas.jpg" alt="Box Saladas" loading="lazy">
                 <div class="categoria-tile-banner">
                     <h3>Box Saladas</h3>
                 </div>
             </a>
             <a href="productos.html#cat-cumpleanos" class="categoria-tile">
-                <img src="cajitas-cumpleanos.jpg" alt="Cajitas de Cumpleaños" class="categoria-tile-img-cumpleanos">
+                <img src="cajitas-cumpleanos.jpg" alt="Cajitas de Cumpleaños" loading="lazy" class="categoria-tile-img-cumpleanos">
                 <div class="categoria-tile-banner">
                     <h3>Cajitas de Cumpleaños</h3>
                 </div>
@@ -183,6 +162,8 @@
             <p>En HappyBox creemos que un regalo es mucho más que un objeto; es una demostración de afecto. Por eso, preparamos cada caja de golosinas a mano, seleccionando los mejores productos y asegurando una presentación elegante para que tu sorpresa sea perfecta.</p>
         </div>
     </section>
+
+    </main>
 
     <!-- ESTO ES EL CARRITO SEPARADO (Modal) -->
     <div id="panel-carrito-overlay" class="panel-oculto">
@@ -218,7 +199,7 @@
             </div>
             <div class="detalle-producto-info">
                 <h2 id="detalle-producto-nombre"></h2>
-                <p id="detalle-producto-descripcion"></p>
+                <div id="detalle-producto-descripcion"></div>
                 <div class="detalle-producto-precio">$<span id="detalle-producto-precio">0</span></div>
                 <div class="detalle-producto-cantidad">
                     <button class="btn-cantidad" onclick="cambiarCantidadModal(-1)" aria-label="Restar uno">−</button>
@@ -294,6 +275,6 @@
         </svg>
     </a>
 
-    <script src="script.js?v=21"></script>
+    <script src="script.js?v=22"></script>
 </body>
 </html>

@@ -336,32 +336,6 @@ function mostrarDestacados(productos) {
     });
 }
 
-// CARRUSEL DEL HERO (home)
-let heroSlideActual = 0;
-
-function mostrarSlideHero(indice) {
-    const slides = document.querySelectorAll('.hero-slide');
-    const puntos = document.querySelectorAll('.hero-punto');
-    if (slides.length === 0) return;
-
-    heroSlideActual = (indice + slides.length) % slides.length;
-
-    slides.forEach((slide, i) => slide.classList.toggle('hero-slide-activo', i === heroSlideActual));
-    puntos.forEach((punto, i) => punto.classList.toggle('hero-punto-activo', i === heroSlideActual));
-}
-
-function cambiarSlideHero(delta) {
-    mostrarSlideHero(heroSlideActual + delta);
-}
-
-function irASlideHero(indice) {
-    mostrarSlideHero(indice);
-}
-
-if (document.querySelector('.hero-carrusel')) {
-    setInterval(() => cambiarSlideHero(1), 6000);
-}
-
 // Renderizar cada producto en la sección de su categoría correspondiente
 function mostrarCatalogoPorCategorias(productos) {
     const contenedores = {};
@@ -407,7 +381,8 @@ function crearTarjetaProducto(producto) {
     tarjeta.className = 'tarjeta-producto';
 
     const banner = elemento('div', 'producto-banner');
-    banner.append(elemento('h3', '', producto.nombre), elemento('span', 'producto-precio', `$${precioTexto(producto.precio)}`));
+    const nombreVisible = producto.nombre === producto.nombre.toUpperCase() ? formatearNombreItem(producto.nombre) : producto.nombre;
+    banner.append(elemento('h3', '', nombreVisible), elemento('span', 'producto-precio', `$${precioTexto(producto.precio)}`));
     tarjeta.append(crearImagen(producto._imagenes[0], producto.nombre), banner);
     tarjeta.tabIndex = 0;
     tarjeta.setAttribute('role', 'button');
@@ -457,9 +432,19 @@ function abrirDetalleProducto(key) {
     detalleProductoImagenes = producto._imagenes && producto._imagenes.length > 0 ? producto._imagenes : [IMAGEN_RESPALDO];
     detalleProductoImagenIndice = 0;
 
-    document.getElementById('detalle-producto-nombre').innerText = producto.nombre;
+    document.getElementById('detalle-producto-nombre').innerText = producto.nombre === producto.nombre.toUpperCase() ? formatearNombreItem(producto.nombre) : producto.nombre;
     mostrarImagenModal();
-    document.getElementById('detalle-producto-descripcion').innerText = formatearDescripcion(producto.descripcion);
+    const descripcion = document.getElementById('detalle-producto-descripcion');
+    const texto = formatearDescripcion(producto.descripcion);
+    descripcion.replaceChildren();
+    if (texto.includes(',')) {
+        descripcion.append(elemento('p', 'detalle-contenido-titulo', 'Tu HappyBox incluye'));
+        const lista = elemento('ul', 'detalle-contenido-lista');
+        texto.split(',').map(item => item.trim()).filter(Boolean).forEach(item => lista.append(elemento('li', '', item)));
+        descripcion.append(lista);
+    } else {
+        descripcion.append(elemento('p', '', texto));
+    }
     document.getElementById('detalle-producto-precio').innerText = precioTexto(producto.precio);
     document.getElementById('detalle-producto-cantidad').innerText = detalleProductoCantidad;
 
@@ -563,7 +548,19 @@ function confirmarAgregarDesdeModal() {
     }
 
     cerrarDetalleProducto();
+    let aviso = document.getElementById('confirmacion-pedido');
+    if (!aviso) {
+        aviso = elemento('div', 'confirmacion-pedido');
+        aviso.id = 'confirmacion-pedido';
+        aviso.setAttribute('role', 'status');
+        document.body.append(aviso);
+    }
+    aviso.textContent = '✓ Agregado a tu pedido';
+    aviso.classList.add('confirmacion-visible');
+    clearTimeout(confirmacionTimer);
+    confirmacionTimer = setTimeout(() => aviso.classList.remove('confirmacion-visible'), 3000);
 }
+let confirmacionTimer;
 
 // Cerrar la vista rápida si se hace clic fuera de la ventana blanca
 const overlayProducto = document.getElementById('panel-producto-overlay');

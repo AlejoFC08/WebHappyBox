@@ -26,15 +26,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
     <!-- Vinculamos el archivo de estilos -->
-    <link rel="stylesheet" href="styles.css?v=33">
+    <link rel="stylesheet" href="styles.css?v=34">
 </head>
 <body>
 
 <header class="cabecera-principal">
         <!-- Izquierda: Logo -->
-        <div class="logo-contenedor">
+        <a class="logo-contenedor" href="index.html" aria-label="HappyBox — Inicio">
             <img src="logo.png?v=2" alt="Happy Box" class="logo-cabecera">
-        </div>
+        </a>
 
         <!-- Centro: Botones de navegación (en celu, panel desplegable) -->
         <nav class="navegacion" id="navegacion-principal">
@@ -67,7 +67,9 @@
     <!-- =========================================
          ENCABEZADO DEL CATÁLOGO
          ========================================= -->
+    <main>
     <section class="catalogo-hero">
+        <p class="sobre-titulo">Detalles para cada ocasión</p>
         <h1>Nuestro Catálogo</h1>
         <p>Elegí una categoría y armá tu pedido a medida.</p>
         <nav class="categoria-subnav">
@@ -114,6 +116,8 @@
         </section>
     </div>
 
+    </main>
+
     <!-- ESTO ES EL CARRITO SEPARADO (Modal) -->
     <div id="panel-carrito-overlay" class="panel-oculto">
         <div class="panel-carrito-modal">
@@ -148,7 +152,7 @@
             </div>
             <div class="detalle-producto-info">
                 <h2 id="detalle-producto-nombre"></h2>
-                <p id="detalle-producto-descripcion"></p>
+                <div id="detalle-producto-descripcion"></div>
                 <div class="detalle-producto-precio">$<span id="detalle-producto-precio">0</span></div>
                 <div class="detalle-producto-cantidad">
                     <button class="btn-cantidad" onclick="cambiarCantidadModal(-1)" aria-label="Restar uno">−</button>
@@ -224,6 +228,6 @@
         </svg>
     </a>
 
-    <script src="script.js?v=21"></script>
+    <script src="script.js?v=22"></script>
 </body>
 </html>
