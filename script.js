@@ -31,6 +31,88 @@ const CARRITO_STORAGE_KEY = 'happybox-carrito';
 
 let carrito = [];
 let productosDisponibles = [];
+let catalogoListo = false;
+let cargandoCatalogo = false;
+const formatoPrecio = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 2 });
+const precioTexto = valor => formatoPrecio.format(valor);
+
+function elemento(tag, clase, texto) {
+    const el = document.createElement(tag);
+    if (clase) el.className = clase;
+    if (texto !== undefined) el.textContent = texto;
+    return el;
+}
+
+function imagenSegura(url) {
+    try {
+        const parsed = new URL(url, location.href);
+        return ['https:', 'http:'].includes(parsed.protocol) ? parsed.href : IMAGEN_RESPALDO;
+    } catch {
+        return IMAGEN_RESPALDO;
+    }
+}
+
+function crearImagen(url, nombre, clase) {
+    const img = elemento('img', clase);
+    img.src = imagenSegura(url);
+    img.alt = nombre;
+    img.loading = 'lazy';
+    img.onerror = () => { img.onerror = null; img.src = IMAGEN_RESPALDO; };
+    return img;
+}
+
+function normalizarProductos(datos) {
+    if (!Array.isArray(datos)) throw new Error('Catálogo inválido');
+    const claves = new Set();
+    return datos.filter(p => p && typeof p === 'object' && String(p.nombre || '').trim()).map(p => {
+        const nombre = String(p.nombre).trim();
+        // Sin ID se usa el nombre y categoría, nunca la posición en la planilla.
+        const key = String(p.id ?? '').trim() || `nombre:${JSON.stringify([nombre, categoriaDeProducto(p)])}`;
+        const precio = typeof p.precio === 'number' ? p.precio :
+            (/^\d+(\.\d+)?$/.test(String(p.precio).trim()) ? Number(p.precio) : NaN);
+        if (!Number.isFinite(precio) || precio < 0 || claves.has(key)) throw new Error('Precio o ID inválido');
+        claves.add(key);
+        return { ...p, nombre, precio, _key: key, _imagenes: obtenerImagenesProducto(p).map(imagenSegura) };
+    });
+}
+
+function sincronizarCarrito() {
+    let cambios = false;
+    carrito = carrito.flatMap(item => {
+        const producto = productosDisponibles.find(p => p._key === item.id);
+        if (!producto) { cambios = true; return []; }
+        if (item.precio !== producto.precio || item.nombre !== producto.nombre) cambios = true;
+        return [{ ...item, nombre: producto.nombre, precio: producto.precio, imagen: producto._imagenes[0] }];
+    });
+    if (cambios) avisoCarrito('Actualizamos tu pedido con los precios actuales y quitamos los productos que ya no están disponibles. Revisalo antes de enviarlo.');
+}
+
+function avisoCarrito(texto) {
+    let aviso = document.getElementById('aviso-carrito');
+    if (!aviso) {
+        aviso = elemento('p', 'aviso-carrito');
+        aviso.id = 'aviso-carrito';
+        aviso.setAttribute('role', 'status');
+        document.querySelector('.pie-carrito').prepend(aviso);
+    }
+    aviso.textContent = texto;
+}
+
+function estadoCatalogo(texto, reintentar = false) {
+    [...Object.values(CATEGORIAS).map(c => c.contenedorId), 'contenedor-destacados'].forEach(id => {
+        const contenedor = document.getElementById(id);
+        if (!contenedor) return;
+        const estado = elemento('div', 'categoria-vacia');
+        estado.setAttribute('role', 'status');
+        estado.append(elemento('p', '', texto));
+        if (reintentar) {
+            const boton = elemento('button', 'btn-reintentar', 'Reintentar');
+            boton.addEventListener('click', cargarProductos);
+            estado.append(boton);
+        }
+        contenedor.replaceChildren(estado);
+    });
+}
 // Producto "extra" (ver categoriaDeProducto) que se ofrece como complemento
 // dentro del modal de vista rápida de cualquier otro producto, ej: una rosa
 // de plástico para sumar a una box. null si la planilla no tiene ninguno.
@@ -174,7 +256,10 @@ function guardarCarritoStorage() {
 function cargarCarritoStorage() {
     try {
         const guardado = localStorage.getItem(CARRITO_STORAGE_KEY);
-        carrito = guardado ? JSON.parse(guardado) : [];
+        const datos = guardado ? JSON.parse(guardado) : [];
+        carrito = Array.isArray(datos) ? datos.filter(item => item && typeof item.id === 'string' &&
+            typeof item.nombre === 'string' && item.precio !== '' && Number.isFinite(Number(item.precio)) && Number(item.precio) >= 0 &&
+            Number.isSafeInteger(item.cantidad) && item.cantidad > 0).map(item => ({ ...item, precio: Number(item.precio) })) : [];
     } catch (error) {
         carrito = [];
     }
@@ -188,7 +273,9 @@ function cargarCarritoStorage() {
 // ancla para que quede bien posicionada.
 function saltarAAnclaSiCorresponde() {
     if (!location.hash) return;
-    const el = document.querySelector(location.hash);
+    let id;
+    try { id = decodeURIComponent(location.hash.slice(1)); } catch { return; }
+    const el = document.getElementById(id);
     if (el) {
         el.scrollIntoView();
     }
@@ -196,31 +283,35 @@ function saltarAAnclaSiCorresponde() {
 
 // Cargar productos desde Google Sheets
 async function cargarProductos() {
+    if (cargandoCatalogo) return;
+    cargandoCatalogo = true;
+    catalogoListo = false;
+    actualizarInterfazCarrito();
+    estadoCatalogo('Cargando productos…');
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
     try {
-        const respuesta = await fetch(API_URL);
-        const productos = await respuesta.json();
-        productos.forEach((producto, indice) => {
-            producto._imagenes = obtenerImagenesProducto(producto);
-            // Clave única y estable, asignada acá para TODOS los productos
-            // (incluidos los "extra" que no se listan en ningún catálogo),
-            // así después se pueden agregar al carrito por su key aunque
-            // nunca hayan pasado por mostrarCatalogoPorCategorias/Destacados.
-            producto._key = (producto.id !== undefined && producto.id !== null && producto.id !== '')
-                ? String(producto.id)
-                : 'idx' + indice;
-        });
+        const respuesta = await fetch(API_URL, { signal: controller.signal, cache: 'no-store' });
+        if (!respuesta.ok) throw new Error('No se pudo cargar el catálogo');
+        const productos = normalizarProductos(await respuesta.json());
         productosDisponibles = productos;
+        avisoCarrito('');
+        sincronizarCarrito();
+        catalogoListo = true;
         productoExtraRosa = productos.find(p => categoriaDeProducto(p) === 'extra') || null;
         mostrarCatalogoPorCategorias(productos);
         mostrarDestacados(productos);
+        if (!productos.some(p => categoriaDeProducto(p) !== 'extra')) {
+            estadoCatalogo('Todavía no hay productos disponibles. Consultanos por WhatsApp.');
+        }
         saltarAAnclaSiCorresponde();
     } catch (error) {
-        Object.values(CATEGORIAS).forEach(cat => {
-            const contenedor = document.getElementById(cat.contenedorId);
-            if (contenedor) {
-                contenedor.innerHTML = '<p class="categoria-vacia">Error al cargar los productos. Intentá refrescar la página.</p>';
-            }
-        });
+        estadoCatalogo('No pudimos cargar los productos. Intentá nuevamente.', true);
+        avisoCarrito('Necesitamos cargar el catálogo para confirmar los precios de tu pedido.');
+    } finally {
+        clearTimeout(timeout);
+        cargandoCatalogo = false;
+        actualizarInterfazCarrito();
     }
 }
 
@@ -315,15 +406,17 @@ function crearTarjetaProducto(producto) {
     const tarjeta = document.createElement('div');
     tarjeta.className = 'tarjeta-producto';
 
-    const imagenSrc = producto._imagenes ? producto._imagenes[0] : IMAGEN_RESPALDO;
-
-    tarjeta.innerHTML = `
-        <img src="${imagenSrc}" alt="${producto.nombre}" onerror="this.onerror=null;this.src='${IMAGEN_RESPALDO}';">
-        <div class="producto-banner">
-            <h3>${producto.nombre}</h3>
-            <span class="producto-precio">$${producto.precio}</span>
-        </div>
-    `;
+    const banner = elemento('div', 'producto-banner');
+    banner.append(elemento('h3', '', producto.nombre), elemento('span', 'producto-precio', `$${precioTexto(producto.precio)}`));
+    tarjeta.append(crearImagen(producto._imagenes[0], producto.nombre), banner);
+    tarjeta.tabIndex = 0;
+    tarjeta.setAttribute('role', 'button');
+    tarjeta.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            abrirDetalleProducto(producto._key);
+        }
+    });
     tarjeta.addEventListener('click', () => abrirDetalleProducto(producto._key));
     return tarjeta;
 }
@@ -331,7 +424,7 @@ function crearTarjetaProducto(producto) {
 // Agregar ítems al carrito (busca los datos completos del producto por su clave)
 function agregarAlCarrito(key, cantidad = 1) {
     const producto = productosDisponibles.find(p => String(p._key) === String(key));
-    if (!producto) return;
+    if (!producto || !catalogoListo || !Number.isSafeInteger(cantidad) || cantidad < 1) return;
 
     const itemExistente = carrito.find(item => String(item.id) === String(key));
 
@@ -364,11 +457,10 @@ function abrirDetalleProducto(key) {
     detalleProductoImagenes = producto._imagenes && producto._imagenes.length > 0 ? producto._imagenes : [IMAGEN_RESPALDO];
     detalleProductoImagenIndice = 0;
 
-    mostrarImagenModal();
-
     document.getElementById('detalle-producto-nombre').innerText = producto.nombre;
+    mostrarImagenModal();
     document.getElementById('detalle-producto-descripcion').innerText = formatearDescripcion(producto.descripcion);
-    document.getElementById('detalle-producto-precio').innerText = producto.precio;
+    document.getElementById('detalle-producto-precio').innerText = precioTexto(producto.precio);
     document.getElementById('detalle-producto-cantidad').innerText = detalleProductoCantidad;
 
     mostrarExtraRosaSiCorresponde(producto);
@@ -392,7 +484,7 @@ function mostrarExtraRosaSiCorresponde(producto) {
     if (!corresponde) return;
 
     document.getElementById('extra-rosa-nombre').innerText = productoExtraRosa.nombre;
-    document.getElementById('extra-rosa-precio').innerText = productoExtraRosa.precio;
+    document.getElementById('extra-rosa-precio').innerText = precioTexto(productoExtraRosa.precio);
     const imgRosa = document.getElementById('extra-rosa-imagen');
     imgRosa.src = productoExtraRosa._imagenes ? productoExtraRosa._imagenes[0] : IMAGEN_RESPALDO;
     imgRosa.alt = productoExtraRosa.nombre;
@@ -539,26 +631,30 @@ function actualizarInterfazCarrito() {
             total += subtotal;
             totalProductos += item.cantidad;
 
-            lista.innerHTML += `
-                <div class="item-carrito">
-                    <img class="item-imagen" src="${item.imagen}" alt="${item.nombre}">
-                    <div class="item-info">
-                        <span class="item-nombre">${item.nombre}</span>
-                        <span class="item-precio-unitario">$${item.precio} c/u</span>
-                    </div>
-                    <div class="item-cantidad-controles">
-                        <button class="btn-cantidad" onclick="cambiarCantidad('${item.id}', -1)" aria-label="Restar uno">−</button>
-                        <span class="item-cantidad">${item.cantidad}</span>
-                        <button class="btn-cantidad" onclick="cambiarCantidad('${item.id}', 1)" aria-label="Sumar uno">+</button>
-                    </div>
-                    <span class="item-subtotal">$${subtotal}</span>
-                    <button class="btn-quitar" onclick="quitarDelCarrito('${item.id}')" aria-label="Quitar del carrito">🗑</button>
-                </div>
-            `;
+            const fila = elemento('div', 'item-carrito');
+            const info = elemento('div', 'item-info');
+            info.append(elemento('span', 'item-nombre', item.nombre),
+                elemento('span', 'item-precio-unitario', '$' + precioTexto(item.precio) + ' c/u'));
+            const controles = elemento('div', 'item-cantidad-controles');
+            const restar = elemento('button', 'btn-cantidad', '−');
+            restar.setAttribute('aria-label', 'Restar uno');
+            restar.addEventListener('click', () => cambiarCantidad(item.id, -1));
+            const sumar = elemento('button', 'btn-cantidad', '+');
+            sumar.setAttribute('aria-label', 'Sumar uno');
+            sumar.addEventListener('click', () => cambiarCantidad(item.id, 1));
+            controles.append(restar, elemento('span', 'item-cantidad', item.cantidad), sumar);
+            const quitar = elemento('button', 'btn-quitar', '🗑');
+            quitar.setAttribute('aria-label', 'Quitar ' + item.nombre + ' del carrito');
+            quitar.addEventListener('click', () => quitarDelCarrito(item.id));
+            fila.append(crearImagen(item.imagen, item.nombre, 'item-imagen'), info, controles,
+                elemento('span', 'item-subtotal', '$' + precioTexto(subtotal)), quitar);
+            lista.append(fila);
         });
     }
 
-    totalSpan.innerText = total;
+    totalSpan.innerText = precioTexto(total);
+    const finalizar = document.querySelector(".btn-whatsapp");
+    finalizar.disabled = !catalogoListo || carrito.length === 0;
     contadorCabecera.innerText = totalProductos; // Actualiza el botón de la cabecera
     contadorCabecera.classList.toggle('badge-oculta', totalProductos === 0);
     guardarCarritoStorage();
@@ -603,6 +699,10 @@ document.querySelectorAll('#navegacion-principal a').forEach(function(link) {
 
 // Enviar el pedido formateado a WhatsApp
 function enviarPedidoWhatsApp() {
+    if (!catalogoListo) {
+        avisoCarrito('Cargá el catálogo para confirmar los precios antes de enviar el pedido.');
+        return;
+    }
     if (carrito.length === 0) {
         alert("Tenés que agregar al menos una HappyBox al carrito.");
         return;
@@ -611,18 +711,18 @@ function enviarPedidoWhatsApp() {
     const numeroDestino = "5491125329776"; // WhatsApp de HappyBox (11 2532-9776)
 
     // Texto del mensaje (con 'HappyBox')
-    let mensaje = "¡Hola HappyBox! 🎁%0AQuiero hacer este pedido:%0A%0A";
+    let mensaje = "¡Hola HappyBox! 🎁\nQuiero hacer este pedido:\n\n";
     let total = 0;
 
     carrito.forEach(item => {
-        mensaje += `- ${item.cantidad}x ${item.nombre} ($${item.precio * item.cantidad})%0A`;
+        mensaje += `- ${item.cantidad}x ${item.nombre} ($${precioTexto(item.precio * item.cantidad)})\n`;
         total += item.precio * item.cantidad;
     });
 
-    mensaje += `%0A*Total: $${total}*%0A%0A¡Muchas gracias!`;
+    mensaje += `\n*Total de productos: $${precioTexto(total)}*\nEnvío a coordinar.\n\n¡Muchas gracias!`;
 
-    const urlWA = `https://wa.me/${numeroDestino}?text=${mensaje}`;
-    window.open(urlWA, '_blank');
+    const urlWA = `https://wa.me/${numeroDestino}?text=${encodeURIComponent(mensaje)}`;
+    window.open(urlWA, '_blank', 'noopener,noreferrer');
 }
 
 // Inicializar: primero se recupera el carrito guardado, después se pinta la

@@ -10,6 +10,33 @@
     --texto-oscuro: #333333;
 }
 
+.btn-whatsapp:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.aviso-carrito {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--bordo);
+}
+
+.aviso-carrito:empty { display: none; }
+
+.btn-reintentar {
+    background: var(--bordo);
+    color: white;
+    padding: 10px 20px;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.tarjeta-producto:focus-visible {
+    outline: 3px solid var(--bordo);
+    outline-offset: 4px;
+}
+
 html {
     scroll-behavior: smooth;
 }
