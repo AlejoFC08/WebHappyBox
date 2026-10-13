@@ -5,7 +5,7 @@
     --bordo: #800311; /* Color principal de marca, tomado del logo */
     --bordo-oscuro: #5C020C;
     --dorado: #C6A664; /* Acento cálido, complementa al bordo */
-    --dorado-oscuro: #ab8e53;
+    --dorado-oscuro: #806323;
     --fondo-claro: #FBF6EF; /* Crema cálido */
     --texto-oscuro: #333333;
 }
@@ -1525,19 +1525,19 @@ footer {
 .navegacion a { text-transform: none; letter-spacing: 0; font-size: 0.9rem; }
 .navegacion a:hover { color: var(--bordo-oscuro); text-decoration: underline; text-underline-offset: 6px; }
 .logo-contenedor { text-decoration: none; }
-.badge-carrito { background: var(--bordo); }
+.badge-carrito { background: var(--dorado); color: var(--bordo-oscuro); }
 .sobre-titulo { color: var(--bordo); font-size: 0.75rem; font-weight: 600; letter-spacing: 1.6px; text-transform: uppercase; }
 .portada { max-width: 1200px; margin: 0 auto; padding: 48px 24px; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 70px; }
 .portada-texto { padding: 20px 0; }
 .portada h1 { font-size: clamp(2.8rem, 5vw, 4.6rem); line-height: 1.1; font-weight: 400; letter-spacing: -1.8px; margin: 22px 0; }
 .portada-descripcion { max-width: 420px; color: #64574f; font-size: 1rem; line-height: 1.85; }
-.btn-portada { display: inline-flex; gap: 32px; align-items: center; margin-top: 16px; background: var(--bordo); color: white; text-decoration: none; border-radius: 6px; padding: 16px 24px; font-size: 0.9rem; font-weight: 600; transition: background 0.2s, transform 0.2s; }
+.btn-portada { display: inline-flex; gap: 32px; align-items: center; margin-top: 16px; background: var(--bordo); color: white; border: 1px solid var(--dorado); text-decoration: none; border-radius: 6px; padding: 16px 24px; font-size: 0.9rem; font-weight: 600; transition: background 0.2s, transform 0.2s; }
 .btn-portada:hover { background: var(--bordo-oscuro); transform: translateY(-2px); }
-.btn-portada span { font-size: 1.3rem; }
+.btn-portada span { font-size: 1.3rem; color: var(--dorado); }
 .portada-nota { font-size: 0.75rem; color: #75665b; margin-top: 20px; line-height: 1.6; }
 .portada-foto { position: relative; min-width: 0; }
 .portada-foto img { width: 100%; height: 490px; display: block; object-fit: cover; border-radius: 100px 12px 12px 12px; }
-.portada-foto-nota { position: absolute; bottom: 20px; left: -20px; background: #fffaf2; color: var(--bordo); border: 1px solid #e9ddc9; padding: 16px 22px; font-family: 'Playfair Display', serif; font-size: 1.2rem; box-shadow: 0 8px 24px #502c1510; }
+.portada-foto-nota { position: absolute; bottom: 20px; left: -20px; background: #fffaf2; color: var(--bordo); border: 1px solid var(--dorado); border-bottom-width: 3px; padding: 16px 22px; font-family: 'Playfair Display', serif; font-size: 1.2rem; box-shadow: 0 8px 24px #502c1510; }
 .confianza-franja { padding: 28px 24px; border-top: 1px solid #e8ded2; border-bottom: 1px solid #e8ded2; gap: 24px; }
 .confianza-item h3 { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; }
 .confianza-item p { color: #6b6058; font-size: 0.78rem; line-height: 1.65; }
@@ -1557,7 +1557,7 @@ footer {
 .tarjeta-producto img, .destacado-tarjeta img { display: block; background: #eee7de; }
 .producto-banner { background: #fffcf8; color: var(--bordo); padding: 18px 18px 44px; }
 .producto-banner h3 { color: var(--bordo); text-transform: none; letter-spacing: 0; line-height: 1.5; font-size: 0.92rem; font-weight: 600; }
-.producto-precio { color: #40322b; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 600; display: inline-block; margin-top: 6px; }
+.producto-precio { color: var(--dorado-oscuro); font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 600; display: inline-block; margin-top: 6px; }
 .tarjeta-producto::after, .destacado-tarjeta::after { content: 'Ver detalle ↗'; top: auto; left: 18px; right: auto; bottom: 14px; height: auto; width: auto; background: transparent; color: var(--bordo); opacity: 1; padding: 0; border-radius: 0; font-size: 0.72rem; }
 .nosotros { background: #f0e7dc; padding: 64px 24px; }
 .contenedor-nosotros h2 { font-weight: 400; }
@@ -1576,7 +1576,7 @@ button:hover { background-color: var(--bordo-oscuro); }
 .detalle-producto-imagen-wrap { width: 50%; background: #f0e7dc; }
 #detalle-producto-imagen { object-fit: contain; max-height: 75vh; }
 .detalle-producto-info { padding: 40px 32px; }
-.detalle-producto-precio { color: var(--bordo); font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 600; }
+.detalle-producto-precio { color: var(--dorado-oscuro); font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 600; }
 .detalle-contenido-titulo { font-size: 0.75rem; font-weight: 600; color: var(--bordo); margin-top: 0; }
 .detalle-contenido-lista { padding-left: 18px; margin-top: 8px; font-size: 0.85rem; line-height: 1.9; }
 .btn-agregar-modal { border-radius: 6px; min-height: 48px; }
@@ -1584,7 +1584,7 @@ button:hover { background-color: var(--bordo-oscuro); }
 .panel-carrito-modal { background: #fffcf8; border-radius: 16px; }
 .confirmacion-pedido { position: fixed; bottom: 28px; left: 50%; transform: translate(-50%, 16px); z-index: 2100; background: var(--bordo); color: white; padding: 16px 24px; border-radius: 8px; box-shadow: 0 6px 24px #502c1530; opacity: 0; visibility: hidden; transition: 0.2s; font-size: 0.85rem; white-space: nowrap; }
 .confirmacion-visible { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
-footer { margin-top: 0; border-top-width: 1px; }
+footer { margin-top: 0; border-top: 3px solid var(--dorado); }
 .footer-marca p, .footer-lista li, .footer-lista-links a, .footer-bottom { color: #edddd5; }
 :is(a, button, input):focus-visible { outline: 3px solid #ab8e53; outline-offset: 4px; }
 
@@ -1639,3 +1639,9 @@ footer { margin-top: 0; border-top-width: 1px; }
         height: 25px;
     }
 }
+
+/* Acentos dorados de HappyBox sobre la base crema y bordó. */
+.sobre-titulo::before { content: ""; display: inline-block; width: 28px; height: 2px; background: var(--dorado); margin-right: 10px; vertical-align: middle; }
+.producto-banner { border-top: 2px solid var(--dorado); }
+.categoria-tile-banner h3::after { content: ""; display: block; width: 28px; height: 2px; margin: 10px auto 0; background: var(--dorado); }
+.btn-agregar-modal { border: 1px solid var(--dorado); }
