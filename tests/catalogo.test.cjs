@@ -105,7 +105,7 @@ test('modelo y foto persisten al recargar y se incluyen en WhatsApp', () => {
     context.localStorage.getItem = () => guardado;
     run('carrito=[]; cargarCarritoStorage(); sincronizarCarrito(); enviarPedidoWhatsApp()');
     assert.equal(run('carrito[0].varianteId'), 'rosa-lila');
-    assert.ok(run('carrito[0].imagen').endsWith('cuaderno-rosa-lila.jpg'));
+    assert.ok(run('carrito[0].imagen').endsWith('cuaderno-rosa-lila-recorte.jpg'));
     const mensaje = new URL(context.opened).searchParams.get('text');
     assert.ok(mensaje.includes('2x Cuadernos A5 — Rosa y lila ($24.000)'));
 });
@@ -125,7 +125,7 @@ test('selector cambia galería y se restablece al abrir otro producto', () => {
     run("seleccionarVariante('luna')");
     assert.equal(elements.get('.btn-agregar-modal').disabled, false);
     assert.equal(run('detalleProductoImagenes.length'), 3);
-    assert.ok(elements.get('detalle-producto-imagen').src.endsWith('agenda-luna.jpg'));
+    assert.ok(elements.get('detalle-producto-imagen').src.endsWith('agenda-luna-recorte.jpg'));
     run("abrirDetalleProducto('papeleria-cuadernos-a5')");
     assert.equal(run('detalleVarianteId'), null);
     assert.equal(elements.get('.btn-agregar-modal').disabled, true);

@@ -8,20 +8,20 @@ const PRODUCTOS_PAPELERIA = [
         id: 'papeleria-agendas-2027', nombre: 'Agendas 2027', precio: 14000,
         categoria: 'papeleria', descripcion: 'Agenda 2027 en tamaño A5. Elegí el diseño de tapa que más te guste.',
         variantes: [
-            { id: 'corazon-lazos', nombre: 'Corazón y lazos · Rosa', imagen: 'assets/papeleria/agenda-corazon-lazos.jpg' },
-            { id: 'luna', nombre: 'Luna · Gris', imagen: 'assets/papeleria/agenda-luna.jpg,assets/papeleria/agenda-luna-2.jpg,assets/papeleria/agenda-luna-3.jpg' },
-            { id: 'corazones', nombre: 'Corazones · Rosa y dorado', imagen: 'assets/papeleria/agenda-corazones.jpg' },
-            { id: 'mono-celeste', nombre: 'Moño · Celeste y rosa', imagen: 'assets/papeleria/agenda-mono-celeste.jpg' },
-            { id: 'circulos-dorados', nombre: 'Círculos · Rosa y dorado', imagen: 'assets/papeleria/agenda-circulos-dorados.jpg' },
-            { id: 'circulos-rosa-azul', nombre: 'Círculos · Rosa y azul', imagen: 'assets/papeleria/agenda-circulos-rosa-azul.jpg' }
+            { id: 'corazon-lazos', nombre: 'Corazón y lazos · Rosa', imagen: 'assets/papeleria/agenda-corazon-lazos-recorte.jpg' },
+            { id: 'luna', nombre: 'Luna · Gris', imagen: 'assets/papeleria/agenda-luna-recorte.jpg,assets/papeleria/agenda-luna-2-recorte.jpg,assets/papeleria/agenda-luna-3-recorte.jpg' },
+            { id: 'corazones', nombre: 'Corazones · Rosa y dorado', imagen: 'assets/papeleria/agenda-corazones-recorte.jpg' },
+            { id: 'mono-celeste', nombre: 'Moño · Celeste y rosa', imagen: 'assets/papeleria/agenda-mono-celeste-recorte.jpg' },
+            { id: 'circulos-dorados', nombre: 'Círculos · Rosa y dorado', imagen: 'assets/papeleria/agenda-circulos-dorados-recorte.jpg' },
+            { id: 'circulos-rosa-azul', nombre: 'Círculos · Rosa y azul', imagen: 'assets/papeleria/agenda-circulos-rosa-azul-recorte.jpg' }
         ]
     },
     {
         id: 'papeleria-cuadernos-a5', nombre: 'Cuadernos A5', precio: 12000,
         categoria: 'papeleria', descripcion: 'Cuaderno en tamaño A5. Elegí tu color favorito.',
         variantes: [
-            { id: 'azul', nombre: 'Azul', imagen: 'assets/papeleria/cuaderno-azul.jpg' },
-            { id: 'rosa-lila', nombre: 'Rosa y lila', imagen: 'assets/papeleria/cuaderno-rosa-lila.jpg' }
+            { id: 'azul', nombre: 'Azul', imagen: 'assets/papeleria/cuaderno-azul-recorte.jpg' },
+            { id: 'rosa-lila', nombre: 'Rosa y lila', imagen: 'assets/papeleria/cuaderno-rosa-lila-recorte.jpg' }
         ]
     }
 ];
