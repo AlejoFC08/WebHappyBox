@@ -1,6 +1,31 @@
 // URL de tu API de Google Apps Script
 const API_URL = "https://script.google.com/macros/s/AKfycbyYGk-Me7wbjak3NDBnP06hw3UKftMxU4143nyBKIN5-lsrSYjPw11HBJqKsLMJcsUj/exec";
 
+// Papelería: una ficha por producto y un ID permanente por diseño/color.
+// Los precios y modelos se mantienen acá; el resto del catálogo sigue en Sheets.
+const PRODUCTOS_PAPELERIA = [
+    {
+        id: 'papeleria-agendas-2027', nombre: 'Agendas 2027', precio: 14000,
+        categoria: 'papeleria', descripcion: 'Agenda 2027 en tamaño A5. Elegí el diseño de tapa que más te guste.',
+        variantes: [
+            { id: 'corazon-lazos', nombre: 'Corazón y lazos · Rosa', imagen: 'assets/papeleria/agenda-corazon-lazos.jpg' },
+            { id: 'luna', nombre: 'Luna · Gris', imagen: 'assets/papeleria/agenda-luna.jpg,assets/papeleria/agenda-luna-2.jpg,assets/papeleria/agenda-luna-3.jpg' },
+            { id: 'corazones', nombre: 'Corazones · Rosa y dorado', imagen: 'assets/papeleria/agenda-corazones.jpg' },
+            { id: 'mono-celeste', nombre: 'Moño · Celeste y rosa', imagen: 'assets/papeleria/agenda-mono-celeste.jpg' },
+            { id: 'circulos-dorados', nombre: 'Círculos · Rosa y dorado', imagen: 'assets/papeleria/agenda-circulos-dorados.jpg' },
+            { id: 'circulos-rosa-azul', nombre: 'Círculos · Rosa y azul', imagen: 'assets/papeleria/agenda-circulos-rosa-azul.jpg' }
+        ]
+    },
+    {
+        id: 'papeleria-cuadernos-a5', nombre: 'Cuadernos A5', precio: 12000,
+        categoria: 'papeleria', descripcion: 'Cuaderno en tamaño A5. Elegí tu color favorito.',
+        variantes: [
+            { id: 'azul', nombre: 'Azul', imagen: 'assets/papeleria/cuaderno-azul.jpg' },
+            { id: 'rosa-lila', nombre: 'Rosa y lila', imagen: 'assets/papeleria/cuaderno-rosa-lila.jpg' }
+        ]
+    }
+];
+
 // Imagen de respaldo temática (caja de regalo) para productos sin foto propia
 const IMAGEN_RESPALDO = "data:image/svg+xml;utf8," + encodeURIComponent(`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
@@ -24,7 +49,8 @@ const CATEGORIAS = {
     dulces: { titulo: 'Box Dulces', contenedorId: 'contenedor-dulces' },
     saladas: { titulo: 'Box Saladas', contenedorId: 'contenedor-saladas' },
     cumpleanos: { titulo: 'Cajitas de Cumpleaños', contenedorId: 'contenedor-cumpleanos' },
-    especiales: { titulo: 'Regalos Especiales', contenedorId: 'contenedor-especiales' }
+    especiales: { titulo: 'Regalos Especiales', contenedorId: 'contenedor-especiales' },
+    papeleria: { titulo: 'Agendas y cuadernos', contenedorId: 'contenedor-papeleria' }
 };
 
 const CARRITO_STORAGE_KEY = 'happybox-carrito';
@@ -72,17 +98,47 @@ function normalizarProductos(datos) {
             (/^\d+(\.\d+)?$/.test(String(p.precio).trim()) ? Number(p.precio) : NaN);
         if (!Number.isFinite(precio) || precio < 0 || claves.has(key)) throw new Error('Precio o ID inválido');
         claves.add(key);
-        return { ...p, nombre, precio, _key: key, _imagenes: obtenerImagenesProducto(p).map(imagenSegura) };
+        const idsVariantes = new Set();
+        if (p.variantes !== undefined && (!Array.isArray(p.variantes) || !p.variantes.length)) throw new Error('Variantes inválidas');
+        const variantes = (p.variantes || []).map(v => {
+            if (!v || typeof v.id !== 'string' || !v.id.trim() || typeof v.nombre !== 'string' || !v.nombre.trim() || idsVariantes.has(v.id)) throw new Error('Variante inválida');
+            idsVariantes.add(v.id);
+            return { id: v.id, nombre: v.nombre.trim(), _imagenes: obtenerImagenesProducto(v).map(imagenSegura) };
+        });
+        return { ...p, nombre, precio, variantes, _key: key,
+            _imagenes: variantes.length ? variantes.map(v => v._imagenes[0]) : obtenerImagenesProducto(p).map(imagenSegura) };
     });
+}
+
+function integrarPapeleria(datos) {
+    if (!Array.isArray(datos)) throw new Error('Catálogo inválido');
+    // Reemplaza las antiguas fichas sueltas para no duplicar agendas o cuadernos.
+    const resto = datos.filter(p => !p || !/^(agendas?|cuadernos?)\b/i.test(String(p.nombre || '').trim()));
+    return normalizarProductos([...resto, ...PRODUCTOS_PAPELERIA]);
+}
+
+function datosItem(producto, varianteId) {
+    const variante = producto.variantes?.find(v => v.id === varianteId);
+    if (producto.variantes?.length && !variante) return null;
+    return {
+        id: variante ? JSON.stringify(['variante', producto._key, variante.id]) : producto._key,
+        productoId: producto._key,
+        ...(variante ? { varianteId: variante.id } : {}),
+        nombre: variante ? `${producto.nombre} — ${variante.nombre}` : producto.nombre,
+        precio: producto.precio,
+        imagen: variante ? variante._imagenes[0] : producto._imagenes[0]
+    };
 }
 
 function sincronizarCarrito() {
     let cambios = false;
     carrito = carrito.flatMap(item => {
-        const producto = productosDisponibles.find(p => p._key === item.id);
+        const producto = productosDisponibles.find(p => p._key === (item.productoId || item.id));
         if (!producto) { cambios = true; return []; }
-        if (item.precio !== producto.precio || item.nombre !== producto.nombre) cambios = true;
-        return [{ ...item, nombre: producto.nombre, precio: producto.precio, imagen: producto._imagenes[0] }];
+        const actual = datosItem(producto, item.varianteId);
+        if (!actual) { cambios = true; return []; }
+        if (item.precio !== actual.precio || item.nombre !== actual.nombre) cambios = true;
+        return [{ ...actual, cantidad: item.cantidad }];
     });
     if (cambios) avisoCarrito('Actualizamos tu pedido con los precios actuales y quitamos los productos que ya no están disponibles. Revisalo antes de enviarlo.');
 }
@@ -231,6 +287,7 @@ function formatearDescripcion(texto) {
 
 function categoriaDeProducto(producto) {
     const texto = (producto.categoria || '').toString().trim().toLowerCase();
+    if (texto.includes('papeler') || texto.includes('agenda') || texto.includes('cuaderno')) return 'papeleria';
     if (texto.includes('ramo')) return 'ramos';
     if (texto.includes('taza')) return 'tazas';
     if (texto.includes('salada') || texto.includes('salado')) return 'saladas';
@@ -293,7 +350,7 @@ async function cargarProductos() {
     try {
         const respuesta = await fetch(API_URL, { signal: controller.signal, cache: 'no-store' });
         if (!respuesta.ok) throw new Error('No se pudo cargar el catálogo');
-        const productos = normalizarProductos(await respuesta.json());
+        const productos = integrarPapeleria(await respuesta.json());
         productosDisponibles = productos;
         avisoCarrito('');
         sincronizarCarrito();
@@ -352,7 +409,7 @@ function mostrarCatalogoPorCategorias(productos) {
 
     if (!hayContenedores) return; // Esta página no tiene catálogo (ej: la home)
 
-    const conteo = { ramos: 0, tazas: 0, dulces: 0, saladas: 0, cumpleanos: 0, especiales: 0 };
+    const conteo = Object.fromEntries(Object.keys(CATEGORIAS).map(clave => [clave, 0]));
 
     productos.forEach(producto => {
         if (!producto.nombre) return;
@@ -383,6 +440,10 @@ function crearTarjetaProducto(producto) {
     const banner = elemento('div', 'producto-banner');
     const nombreVisible = producto.nombre === producto.nombre.toUpperCase() ? formatearNombreItem(producto.nombre) : producto.nombre;
     banner.append(elemento('h3', '', nombreVisible), elemento('span', 'producto-precio', `$${precioTexto(producto.precio)}`));
+    if (producto.variantes?.length) {
+        tarjeta.classList.add('tarjeta-papeleria');
+        banner.append(elemento('span', 'producto-modelos', `${producto.variantes.length} modelos · Tamaño A5`));
+    }
     tarjeta.append(crearImagen(producto._imagenes[0], producto.nombre), banner);
     tarjeta.tabIndex = 0;
     tarjeta.setAttribute('role', 'button');
@@ -397,24 +458,21 @@ function crearTarjetaProducto(producto) {
 }
 
 // Agregar ítems al carrito (busca los datos completos del producto por su clave)
-function agregarAlCarrito(key, cantidad = 1) {
+function agregarAlCarrito(key, cantidad = 1, varianteId = null) {
     const producto = productosDisponibles.find(p => String(p._key) === String(key));
     if (!producto || !catalogoListo || !Number.isSafeInteger(cantidad) || cantidad < 1) return;
 
-    const itemExistente = carrito.find(item => String(item.id) === String(key));
+    const datos = datosItem(producto, varianteId);
+    if (!datos) return false;
+    const itemExistente = carrito.find(item => item.id === datos.id);
 
     if (itemExistente) {
         itemExistente.cantidad += cantidad;
     } else {
-        carrito.push({
-            id: String(key),
-            nombre: producto.nombre,
-            precio: producto.precio,
-            imagen: producto._imagenes ? producto._imagenes[0] : IMAGEN_RESPALDO,
-            cantidad: cantidad
-        });
+        carrito.push({ ...datos, cantidad });
     }
     actualizarInterfazCarrito();
+    return true;
 }
 
 // MODAL DE DETALLE DE PRODUCTO (vista rápida antes de agregar al carrito)
@@ -422,6 +480,51 @@ let detalleProductoKey = null;
 let detalleProductoCantidad = 1;
 let detalleProductoImagenes = [];
 let detalleProductoImagenIndice = 0;
+let detalleVarianteId = null;
+
+function mostrarVariantes(producto) {
+    const grupo = document.getElementById('detalle-variantes');
+    grupo.replaceChildren();
+    grupo.hidden = !producto.variantes?.length;
+    const botonAgregar = document.querySelector('.btn-agregar-modal');
+    botonAgregar.disabled = Boolean(producto.variantes?.length && !detalleVarianteId);
+    botonAgregar.textContent = botonAgregar.disabled ? 'Elegí un modelo para agregar' : 'Agregar al carrito';
+    document.getElementById('panel-producto-overlay').classList.toggle('producto-con-variantes', Boolean(producto.variantes?.length));
+    if (!producto.variantes?.length) return;
+    grupo.append(elemento('p', 'variantes-titulo', 'Elegí tu modelo / color'));
+    const opciones = elemento('div', 'variantes-opciones');
+    opciones.setAttribute('role', 'group');
+    opciones.setAttribute('aria-label', 'Modelos y colores disponibles');
+    producto.variantes.forEach(v => {
+        const boton = elemento('button', 'variante-opcion');
+        boton.type = 'button';
+        boton.setAttribute('aria-pressed', String(v.id === detalleVarianteId));
+        boton.setAttribute('aria-label', v.nombre);
+        const miniatura = crearImagen(v._imagenes[0], '');
+        boton.append(miniatura, elemento('span', '', v.nombre));
+        boton.addEventListener('click', () => seleccionarVariante(v.id));
+        opciones.append(boton);
+    });
+    grupo.append(opciones);
+    const seleccion = producto.variantes.find(v => v.id === detalleVarianteId);
+    const estado = elemento('p', 'variante-seleccionada', seleccion ? `Seleccionaste: ${seleccion.nombre}` : 'Seleccioná un modelo para continuar.');
+    estado.setAttribute('role', 'status');
+    grupo.append(estado);
+}
+
+function seleccionarVariante(id) {
+    const producto = productosDisponibles.find(p => p._key === detalleProductoKey);
+    const variante = producto?.variantes.find(v => v.id === id);
+    if (!variante) return;
+    detalleVarianteId = id;
+    detalleProductoImagenes = variante._imagenes;
+    detalleProductoImagenIndice = 0;
+    mostrarImagenModal();
+    // Mantiene el foco sobre la opción elegida al actualizar los controles.
+    mostrarVariantes(producto);
+    const indice = producto.variantes.findIndex(v => v.id === id);
+    document.querySelectorAll('.variante-opcion')[indice]?.focus();
+}
 
 function abrirDetalleProducto(key) {
     const producto = productosDisponibles.find(p => String(p._key) === String(key));
@@ -429,7 +532,8 @@ function abrirDetalleProducto(key) {
 
     detalleProductoKey = key;
     detalleProductoCantidad = 1;
-    detalleProductoImagenes = producto._imagenes && producto._imagenes.length > 0 ? producto._imagenes : [IMAGEN_RESPALDO];
+    detalleVarianteId = null;
+    detalleProductoImagenes = producto.variantes?.length ? producto.variantes[0]._imagenes : producto._imagenes;
     detalleProductoImagenIndice = 0;
 
     document.getElementById('detalle-producto-nombre').innerText = producto.nombre === producto.nombre.toUpperCase() ? formatearNombreItem(producto.nombre) : producto.nombre;
@@ -449,6 +553,7 @@ function abrirDetalleProducto(key) {
     document.getElementById('detalle-producto-cantidad').innerText = detalleProductoCantidad;
 
     mostrarExtraRosaSiCorresponde(producto);
+    mostrarVariantes(producto);
 
     document.getElementById('panel-producto-overlay').classList.add('panel-visible');
 }
@@ -498,7 +603,9 @@ function cerrarLightboxExtra() {
 // Pinta la foto actual de la galería del modal, junto con las flechas y los
 // puntos (que solo se muestran si el producto tiene más de una foto)
 function mostrarImagenModal() {
-    const nombre = document.getElementById('detalle-producto-nombre').innerText;
+    const producto = productosDisponibles.find(p => p._key === detalleProductoKey);
+    const variante = producto?.variantes?.find(v => v.id === detalleVarianteId);
+    const nombre = document.getElementById('detalle-producto-nombre').innerText + (variante ? ` — ${variante.nombre}` : '');
     const imagen = document.getElementById('detalle-producto-imagen');
     imagen.src = detalleProductoImagenes[detalleProductoImagenIndice];
     imagen.alt = nombre;
@@ -540,7 +647,7 @@ function cambiarCantidadModal(delta) {
 
 function confirmarAgregarDesdeModal() {
     if (!detalleProductoKey) return;
-    agregarAlCarrito(detalleProductoKey, detalleProductoCantidad);
+    if (!agregarAlCarrito(detalleProductoKey, detalleProductoCantidad, detalleVarianteId)) return;
 
     const checkRosa = document.getElementById('check-agregar-rosa');
     if (checkRosa && checkRosa.checked && productoExtraRosa) {

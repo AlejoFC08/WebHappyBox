@@ -75,3 +75,61 @@ test('fallo de carga permite reintentar y luego habilita el pedido', async () =>
     assert.equal(run('catalogoListo'), true);
     assert.equal(elements.get('.pie-carrito').children.find(node => node.id === 'aviso-carrito').textContent, '');
 });
+
+test('papelería agrupa seis agendas y dos cuadernos sin duplicar la agenda anterior', () => {
+    const { run } = entorno();
+    run("productosDisponibles=integrarPapeleria([{id:'vieja',nombre:'AGENDA 2027',precio:22000},{id:'box',nombre:'Box con agenda',precio:30000}])");
+    assert.equal(run('productosDisponibles.length'), 3);
+    assert.equal(run("productosDisponibles.find(p=>p.nombre==='Agendas 2027').variantes.length"), 6);
+    assert.equal(run("productosDisponibles.find(p=>p.nombre==='Cuadernos A5').variantes.length"), 2);
+    assert.equal(run("productosDisponibles.find(p=>p.nombre==='Agendas 2027').precio"), 14000);
+    assert.equal(run("productosDisponibles.find(p=>p.nombre==='Cuadernos A5').precio"), 12000);
+});
+
+test('se exige modelo y cada variante ocupa su propia línea en el carrito', () => {
+    const { run } = entorno();
+    run('productosDisponibles=integrarPapeleria([]); catalogoListo=true');
+    assert.equal(run("agregarAlCarrito('papeleria-agendas-2027',1)"), false);
+    assert.equal(run("agregarAlCarrito('papeleria-agendas-2027',1,'inexistente')"), false);
+    run("agregarAlCarrito('papeleria-agendas-2027',2,'luna'); agregarAlCarrito('papeleria-agendas-2027',1,'corazones'); agregarAlCarrito('papeleria-agendas-2027',1,'luna')");
+    assert.equal(run('carrito.length'), 2);
+    assert.equal(run('carrito[0].cantidad'), 3);
+    assert.equal(run('carrito[1].cantidad'), 1);
+    assert.notEqual(run('carrito[0].id'), run('carrito[1].id'));
+});
+
+test('modelo y foto persisten al recargar y se incluyen en WhatsApp', () => {
+    const { context, run } = entorno();
+    run("productosDisponibles=integrarPapeleria([]); catalogoListo=true; agregarAlCarrito('papeleria-cuadernos-a5',2,'rosa-lila')");
+    const guardado = run('JSON.stringify(carrito)');
+    context.localStorage.getItem = () => guardado;
+    run('carrito=[]; cargarCarritoStorage(); sincronizarCarrito(); enviarPedidoWhatsApp()');
+    assert.equal(run('carrito[0].varianteId'), 'rosa-lila');
+    assert.ok(run('carrito[0].imagen').endsWith('cuaderno-rosa-lila.jpg'));
+    const mensaje = new URL(context.opened).searchParams.get('text');
+    assert.ok(mensaje.includes('2x Cuadernos A5 — Rosa y lila ($24.000)'));
+});
+
+test('sincronización conserva la variante, actualiza precio y retira modelos eliminados', () => {
+    const { run } = entorno();
+    run("productosDisponibles=integrarPapeleria([]); catalogoListo=true; agregarAlCarrito('papeleria-agendas-2027',1,'luna'); agregarAlCarrito('papeleria-agendas-2027',1,'corazones'); productosDisponibles[0].precio=15000; productosDisponibles[0].variantes=productosDisponibles[0].variantes.filter(v=>v.id!=='corazones'); sincronizarCarrito()");
+    assert.equal(run('carrito.length'), 1);
+    assert.equal(run('carrito[0].varianteId'), 'luna');
+    assert.equal(run('carrito[0].precio'), 15000);
+});
+
+test('selector cambia galería y se restablece al abrir otro producto', () => {
+    const { run, elements } = entorno();
+    run("productosDisponibles=integrarPapeleria([{id:'box',nombre:'Box',precio:100}]); catalogoListo=true; abrirDetalleProducto('papeleria-agendas-2027')");
+    assert.equal(elements.get('.btn-agregar-modal').disabled, true);
+    run("seleccionarVariante('luna')");
+    assert.equal(elements.get('.btn-agregar-modal').disabled, false);
+    assert.equal(run('detalleProductoImagenes.length'), 3);
+    assert.ok(elements.get('detalle-producto-imagen').src.endsWith('agenda-luna.jpg'));
+    run("abrirDetalleProducto('papeleria-cuadernos-a5')");
+    assert.equal(run('detalleVarianteId'), null);
+    assert.equal(elements.get('.btn-agregar-modal').disabled, true);
+    run("abrirDetalleProducto('box')");
+    assert.equal(elements.get('detalle-variantes').hidden, true);
+    assert.equal(elements.get('.btn-agregar-modal').disabled, false);
+});

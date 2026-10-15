@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo - Happy Box</title>
-    <meta name="description" content="Elegí entre Ramos de Golosinas, Arreglos de Tazas, Box Dulces y Box Saladas. Armamos tu pedido a medida.">
+    <meta name="description" content="Elegí entre Ramos de Golosinas, Arreglos de Tazas, Box Dulces, Box Saladas, Agendas 2027 y Cuadernos A5. Armamos tu pedido a medida.">
 
     <!-- Ícono de la pestaña del navegador -->
     <link rel="icon" href="favicon.ico" sizes="any">
@@ -26,7 +26,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
     <!-- Vinculamos el archivo de estilos -->
-    <link rel="stylesheet" href="styles.css?v=35">
+    <link rel="stylesheet" href="styles.css?v=36">
 </head>
 <body>
 
@@ -79,6 +79,7 @@
             <a href="#cat-saladas">Box Saladas</a>
             <a href="#cat-cumpleanos">Cajitas de Cumpleaños</a>
             <a href="#cat-especiales">Regalos Especiales</a>
+            <a href="#cat-papeleria">Agendas y cuadernos</a>
         </nav>
     </section>
 
@@ -115,6 +116,13 @@
             <div class="productos-completo" id="contenedor-especiales"></div>
         </section>
     </div>
+
+    <section class="categoria-seccion seccion-papeleria" id="cat-papeleria">
+        <p class="sobre-titulo">Para organizar, escribir y regalar</p>
+        <h2>Agendas y cuadernos</h2>
+        <p class="papeleria-intro">Tu próximo año y tus nuevas ideas, con tu estilo. Todos en tamaño A5.</p>
+        <div class="productos-completo" id="contenedor-papeleria"></div>
+    </section>
 
     </main>
 
@@ -154,6 +162,7 @@
                 <h2 id="detalle-producto-nombre"></h2>
                 <div id="detalle-producto-descripcion"></div>
                 <div class="detalle-producto-precio">$<span id="detalle-producto-precio">0</span></div>
+                <div id="detalle-variantes" class="detalle-variantes" hidden></div>
                 <div class="detalle-producto-cantidad">
                     <button class="btn-cantidad" onclick="cambiarCantidadModal(-1)" aria-label="Restar uno">−</button>
                     <span id="detalle-producto-cantidad">1</span>
@@ -198,6 +207,7 @@
                     <li><a href="productos.html#cat-saladas">Box Saladas</a></li>
                     <li><a href="productos.html#cat-cumpleanos">Cajitas de Cumpleaños</a></li>
                     <li><a href="productos.html#cat-especiales">Regalos Especiales</a></li>
+                    <li><a href="productos.html#cat-papeleria">Agendas y cuadernos</a></li>
                 </ul>
             </div>
             <div class="footer-columna" id="pie-contacto">
@@ -228,6 +238,6 @@
         </svg>
     </a>
 
-    <script src="script.js?v=22"></script>
+    <script src="script.js?v=23"></script>
 </body>
 </html>

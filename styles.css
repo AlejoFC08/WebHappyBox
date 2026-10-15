@@ -1645,3 +1645,34 @@ footer { margin-top: 0; border-top: 3px solid var(--dorado); }
 .producto-banner { border-top: 2px solid var(--dorado); }
 .categoria-tile-banner h3::after { content: ""; display: block; width: 28px; height: 2px; margin: 10px auto 0; background: var(--dorado); }
 .btn-agregar-modal { border: 1px solid var(--dorado); }
+
+/* Papelería y selector de modelos: una ficha, varias opciones. */
+.categorias-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.categoria-papeleria img { object-position: center 65%; }
+.seccion-papeleria { max-width: 1170px; margin: 0 auto; padding: 40px 24px 60px; }
+.seccion-papeleria > .sobre-titulo, .papeleria-intro { text-align: center; }
+.seccion-papeleria h2 { margin-bottom: 14px; }
+.papeleria-intro { color: #64574f; line-height: 1.7; margin: 0 0 32px; font-size: 0.9rem; }
+.producto-modelos { display: block; font-size: 0.75rem; color: #64574f; margin-top: 10px; line-height: 1.5; }
+.tarjeta-papeleria img { height: 320px; object-fit: contain; }
+.detalle-variantes { margin: 0 0 20px; }
+.variantes-titulo { font-size: 0.85rem; color: var(--bordo); font-weight: 600; margin: 0 0 12px; }
+.variantes-opciones { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.variante-opcion { background: #fffaf3; color: #55443a; border: 1px solid #ded1c2; border-radius: 8px; padding: 5px; width: 100%; letter-spacing: 0; text-align: center; font-size: 0.68rem; line-height: 1.4; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.variante-opcion img { width: 100%; height: 86px; object-fit: cover; object-position: center 65%; border-radius: 4px; }
+.variante-opcion:hover { background: #f0e7dc; color: var(--bordo); border-color: var(--dorado); }
+.variante-opcion[aria-pressed="true"] { border: 2px solid var(--bordo); padding: 4px; background: #f0e7dc; color: var(--bordo); box-shadow: 0 0 0 1px var(--dorado); }
+.variante-seleccionada { margin: 12px 0 0; font-size: 0.75rem; color: var(--bordo); line-height: 1.6; }
+.btn-agregar-modal:disabled { opacity: 0.55; cursor: not-allowed; }
+.producto-con-variantes .panel-producto-modal { max-width: 980px; }
+.producto-con-variantes #detalle-producto-imagen { object-fit: contain; height: 100%; max-height: 80vh; }
+.producto-con-variantes .detalle-producto-info { padding: 30px 24px; }
+.producto-con-variantes .detalle-producto-precio { margin-bottom: 20px; }
+@media (max-width: 768px) {
+    .categorias-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .tarjeta-papeleria img { height: 300px; }
+    .seccion-papeleria { padding: 32px 20px; }
+    .producto-con-variantes #detalle-producto-imagen { height: 300px; }
+    .producto-con-variantes .detalle-producto-imagen-wrap { min-height: 300px; }
+    .variante-opcion img { height: 80px; }
+}

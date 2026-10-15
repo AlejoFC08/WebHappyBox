@@ -26,7 +26,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
     <!-- Vinculamos el archivo de estilos -->
-    <link rel="stylesheet" href="styles.css?v=35">
+    <link rel="stylesheet" href="styles.css?v=36">
 </head>
 <body>
 
@@ -142,6 +142,10 @@
                     <h3>Cajitas de Cumpleaños</h3>
                 </div>
             </a>
+            <a href="productos.html#cat-papeleria" class="categoria-tile categoria-papeleria">
+                <img src="assets/papeleria/agenda-corazon-lazos.jpg" alt="Agenda 2027 rosa con corazón y lazos" loading="lazy">
+                <div class="categoria-tile-banner"><h3>Agendas y cuadernos</h3></div>
+            </a>
         </div>
     </section>
 
@@ -201,6 +205,7 @@
                 <h2 id="detalle-producto-nombre"></h2>
                 <div id="detalle-producto-descripcion"></div>
                 <div class="detalle-producto-precio">$<span id="detalle-producto-precio">0</span></div>
+                <div id="detalle-variantes" class="detalle-variantes" hidden></div>
                 <div class="detalle-producto-cantidad">
                     <button class="btn-cantidad" onclick="cambiarCantidadModal(-1)" aria-label="Restar uno">−</button>
                     <span id="detalle-producto-cantidad">1</span>
@@ -245,6 +250,7 @@
                     <li><a href="productos.html#cat-saladas">Box Saladas</a></li>
                     <li><a href="productos.html#cat-cumpleanos">Cajitas de Cumpleaños</a></li>
                     <li><a href="productos.html#cat-especiales">Regalos Especiales</a></li>
+                    <li><a href="productos.html#cat-papeleria">Agendas y cuadernos</a></li>
                 </ul>
             </div>
             <div class="footer-columna" id="pie-contacto">
@@ -275,6 +281,6 @@
         </svg>
     </a>
 
-    <script src="script.js?v=22"></script>
+    <script src="script.js?v=23"></script>
 </body>
 </html>
